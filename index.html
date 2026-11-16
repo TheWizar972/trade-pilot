@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeFlow · M-Pesa Trading</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0b0e14;
+            color: #e9edf2;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* realistic trading dashboard gradient */
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* header */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            background: linear-gradient(145deg, #1e90ff, #0077be);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 8px 16px rgba(0, 150, 255, 0.25);
+        }
+
+        .logo-text {
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff, #b0c4de);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: #151b26;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: 1px solid #2a3340;
+        }
+
+        .user-badge i {
+            color: #3b82f6;
+        }
+
+        .role-indicator {
+            background: #1f2937;
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #9ca3af;
+            border: 1px solid #2d3748;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .role-indicator.admin-active {
+            background: #7c3aed;
+            color: white;
+            border-color: #a78bfa;
+            box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
+        }
+
+        /* main grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* trading card */
+        .trade-panel {
+            background: #10151f;
+            border-radius: 28px;
+            padding: 1.8rem;
+            border: 1px solid #1f2a37;
+            box-shadow: 0 25px 40px -15px rgba(0, 0, 0, 0.7);
+        }
+
+        .asset-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .asset-name {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .asset-name i {
+            font-size: 2rem;
+            color: #f7931a;
+        }
+
+        .asset-name h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .price-display {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 1rem 0 0.5rem;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .price-change {
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            background: #1e2a3a;
+            color: #00c076;
+        }
+
+        .chart-placeholder {
+            height: 160px;
+            background: linear-gradient(180deg, #0e1622 0%, #0a1019 100%);
+            border-radius: 20px;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1d2a38;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-placeholder::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, rgba(59, 130, 246, 0.03) 0px, rgba(59, 130, 246, 0.03) 20px, transparent 20px, transparent 40px);
+        }
+
+        .chart-placeholder i {
+            font-size: 3rem;
+            color: #2a3a4e;
+            z-index: 1;
+        }
+
+        .trade-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.8rem;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-buy {
+            background: #00c076;
+            color: #04120c;
+            box-shadow: 0 10px 20px -8px rgba(0, 192, 118, 0.3);
+        }
+
+        .btn-buy:hover {
+            background: #00d886;
+            transform: scale(1.02);
+        }
+
+        .btn-sell {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 10px 20px -8px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-sell:hover {
+            background: #f55c5c;
+            transform: scale(1.02);
+        }
+
+        /* wallet / deposit withdraw panel */
+        .wallet-panel {
+            background: #10151f;
+            border-radius: 28px;
+            padding: 1.8rem;
+            border: 1px solid #1f2a37;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            box-shadow: 0 25px 40px -15px rgba(0, 0, 0, 0.7);
+        }
+
+        .balance-card {
+            background: linear-gradient(145deg, #1a2332, #0f1722);
+            border-radius: 22px;
+            padding: 1.5rem;
+            border: 1px solid #2a3748;
+        }
+
+        .balance-label {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .balance-amount {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 0.5rem 0 0.2rem;
+            color: #ffffff;
+        }
+
+        .mpesa-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #0b2b1f;
+            color: #00c076;
+            padding: 0.3rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+
+        .mpesa-tag i {
+            font-size: 1rem;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn-deposit {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 10px 18px -8px #2563eb;
+        }
+
+        .btn-deposit:hover {
+            background: #3b82f6;
+        }
+
+        .btn-withdraw {
+            background: #1e293b;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+        }
+
+        .btn-withdraw:hover {
+            background: #2d3a4f;
+        }
+
+        /* admin dashboard */
+        .admin-section {
+            margin-top: 2rem;
+            background: #10151f;
+            border-radius: 28px;
+            padding: 1.8rem;
+            border: 1px solid #1f2a37;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+        }
+
+        .section-title h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .winrate-badge {
+            background: #1e2a3a;
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #9ca3af;
+        }
+
+        .admin-badge {
+            background: #7c3aed20;
+            color: #a78bfa;
+            border: 1px solid #7c3aed40;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid #1f2a37;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem 1.2rem;
+            background: #0c121c;
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 0.8rem;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 1rem 1.2rem;
+            border-top: 1px solid #1a2332;
+            color: #cbd5e1;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-won {
+            background: #0b2b1f;
+            color: #00c076;
+        }
+
+        .status-lost {
+            background: #2b1212;
+            color: #f87171;
+        }
+
+        .status-pending {
+            background: #2b2512;
+            color: #fbbf24;
+        }
+
+        .admin-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .admin-controls .btn {
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            border-radius: 40px;
+        }
+
+        /* toast / modal */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #1e293b;
+            border-left: 6px solid #3b82f6;
+            padding: 1rem 1.8rem;
+            border-radius: 14px;
+            box-shadow: 0 20px 30px -10px black;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+            z-index: 999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.25s ease;
+            border: 1px solid #2d3a4f;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            font-size: 1.4rem;
+            color: #3b82f6;
+        }
+
+        /* responsive */
+        @media (max-width: 1000px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .app-container {
+                padding: 1rem;
+            }
+        }
+
+        /* small mpesa modal */
+        .mpesa-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .mpesa-modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .mpesa-modal {
+            background: #10151f;
+            border-radius: 32px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid #2a3748;
+            box-shadow: 0 40px 60px -20px black;
+            transform: scale(0.95);
+            transition: transform 0.2s;
+        }
+
+        .mpesa-modal-overlay.active .mpesa-modal {
+            transform: scale(1);
+        }
+
+        .mpesa-modal h3 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mpesa-modal p {
+            color: #94a3b8;
+            margin-bottom: 1.8rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 1rem;
+            background: #0b1119;
+            border: 1px solid #2a3748;
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #3b82f6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.8rem;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+        }
+
+        .btn-cancel {
+            background: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .btn-confirm {
+            background: #2563eb;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top navigation -->
+        <div class="top-bar">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+                <span class="logo-text">TradeFlow</span>
+            </div>
+            <div class="user-badge">
+                <i class="fas fa-user-circle"></i>
+                <span id="userRoleLabel">Trader</span>
+                <div id="roleToggle" class="role-indicator">Switch to Admin</div>
+            </div>
+        </div>
+
+        <!-- Main trading + wallet grid -->
+        <div class="main-grid">
+            <!-- Left: Trading panel -->
+            <div class="trade-panel">
+                <div class="asset-header">
+                    <div class="asset-name">
+                        <i class="fab fa-bitcoin"></i>
+                        <h2>BTC / USD</h2>
+                    </div>
+                    <div class="winrate-badge" id="winrateDisplay">Win rate: 10%</div>
+                </div>
+                <div class="price-display">
+                    $67,432.10
+                    <span class="price-change"><i class="fas fa-arrow-up"></i> 2.4%</span>
+                </div>
+                <div class="chart-placeholder">
+                    <i class="fas fa-chart-simple"></i>
+                </div>
+                <div class="trade-actions">
+                    <button class="btn btn-buy" id="buyBtn"><i class="fas fa-arrow-up"></i> Buy / Long</button>
+                    <button class="btn btn-sell" id="sellBtn"><i class="fas fa-arrow-down"></i> Sell / Short</button>
+                </div>
+                <p style="color:#64748b; font-size:0.8rem; margin-top:1.5rem; text-align:center;">
+                    <i class="fas fa-bolt"></i> Trades settle instantly · Winning rate applies
+                </p>
+            </div>
+
+            <!-- Right: Wallet panel -->
+            <div class="wallet-panel">
+                <div class="balance-card">
+                    <div class="balance-label"><i class="fas fa-wallet"></i> Available balance</div>
+                    <div class="balance-amount" id="balanceDisplay">$0.00</div>
+                    <div class="mpesa-tag"><i class="fas fa-mobile-alt"></i> M-Pesa connected</div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-deposit" id="depositBtn"><i class="fas fa-arrow-down"></i> Deposit</button>
+                    <button class="btn btn-withdraw" id="withdrawBtn"><i class="fas fa-arrow-up"></i> Withdraw</button>
+                </div>
+                <div style="font-size:0.8rem; color:#94a3b8; text-align:center; border-top:1px solid #1f2a37; padding-top:1.2rem;">
+                    <i class="fas fa-shield-alt"></i> Funds settle via M-Pesa
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin dashboard (visible only when admin) -->
+        <div id="adminPanel" class="admin-section" style="display: none;">
+            <div class="section-title">
+                <h3><i class="fas fa-crown" style="color:#a78bfa;"></i> Admin Dashboard <span class="winrate-badge admin-badge" style="margin-left:8px;">90% win rate</span></h3>
+                <span class="winrate-badge"><i class="fas fa-eye"></i> Monitoring all trades</span>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trader</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Result</th>
+                            <th>Payout</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTradeTableBody">
+                        <!-- dynamic admin rows -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="admin-controls" style="margin-top:1.2rem;">
+                <button class="btn btn-buy" id="adminTradeBtn" style="padding:0.7rem 1.5rem; font-size:0.9rem;">
+                    <i class="fas fa-play"></i> Simulate admin trade (90% win)
+                </button>
+                <span style="color:#64748b; font-size:0.85rem; display:flex; align-items:center; gap:0.4rem;">
+                    <i class="fas fa-info-circle"></i> Admin wins go to your M-Pesa
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- M-Pesa Deposit/Withdraw Modal -->
+    <div class="mpesa-modal-overlay" id="mpesaModal">
+        <div class="mpesa-modal">
+            <h3 id="modalTitle"><i class="fas fa-mobile-alt" style="color:#00c076;"></i> Deposit via M-Pesa</h3>
+            <p id="modalSubtitle">Enter amount to deposit directly from your M-Pesa account.</p>
+            <div class="input-group">
+                <label>Amount (USD equivalent)</label>
+                <input type="number" id="mpesaAmount" placeholder="e.g. 500" min="1" step="1" value="100">
+            </div>
+            <div class="input-group">
+                <label>M-Pesa Phone Number</label>
+                <input type="tel" id="mpesaPhone" placeholder="+254 7XX XXX XXX" value="+254712345678">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel" id="modalCancel">Cancel</button>
+                <button class="btn btn-confirm" id="modalConfirm">Confirm M-Pesa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle" id="toastIcon"></i>
+        <span id="toastMessage">Transaction completed</span>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- State ----------
+            let balance = 0.00;
+            let isAdmin = false;
+            let trades = [];        // { id, trader, type, amount, result, payout, isAdmin }
+            let currentAction = null; // 'deposit' or 'withdraw'
+            let nextTradeId = 1;
+
+            // DOM elements
+            const balanceDisplay = document.getElementById('balanceDisplay');
+            const winrateDisplay = document.getElementById('winrateDisplay');
+            const userRoleLabel = document.getElementById('userRoleLabel');
+            const roleToggle = document.getElementById('roleToggle');
+            const adminPanel = document.getElementById('adminPanel');
+            const adminTradeTableBody = document.getElementById('adminTradeTableBody');
+            const mpesaModal = document.getElementById('mpesaModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSubtitle = document.getElementById('modalSubtitle');
+            const mpesaAmount = document.getElementById('mpesaAmount');
+            const mpesaPhone = document.getElementById('mpesaPhone');
+            const modalCancel = document.getElementById('modalCancel');
+            const modalConfirm = document.getElementById('modalConfirm');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            // ---------- Helper Functions ----------
+            function formatMoney(amount) {
+                return '$' + amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+
+            function updateBalanceUI() {
+                balanceDisplay.textContent = formatMoney(balance);
+            }
+
+            function showToast(message, isSuccess = true) {
+                toastMessage.textContent = message;
+                toastIcon.className = isSuccess ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+                toastIcon.style.color = isSuccess ? '#00c076' : '#f87171';
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+
+            // Determine win/loss based on role
+            function determineOutcome(isAdminTrade) {
+                const winRate = isAdminTrade ? 90 : 10; // admin 90%, public 10%
+                return Math.random() * 100 < winRate;
+            }
+
+            // Add trade to table and state
+            function recordTrade(trader, type, amount, isAdminTrade = false) {
+                const won = determineOutcome(isAdminTrade);
+                const payout = won ? amount * 2 : 0; // simple 1:1 payout
+                const result = won ? 'Won' : 'Lost';
+                const statusClass = won ? 'status-won' : 'status-lost';
+
+                const trade = {
+                    id: nextTradeId++,
+                    trader: trader,
+                    type: type,
+                    amount: amount,
+                    result: won,
+                    payout: payout,
+                    isAdmin: isAdminTrade
+                };
+                trades.push(trade);
+                renderAdminTable(); // update admin view if visible
+
+                // If admin trade -> winnings go to admin's M-Pesa (balance? we simulate as admin balance)
+                if (isAdminTrade) {
+                    if (won) {
+                        // Admin wins: add to balance (simulating M-Pesa receipt)
+                        balance += payout;
+                        updateBalanceUI();
+                        showToast(`Admin trade won! $${payout.toFixed(2)} sent to your M-Pesa`, true);
+                    } else {
+                        balance -= amount;
+                        updateBalanceUI();
+                        showToast(`Admin trade lost: -$${amount.toFixed(2)}`, false);
+                    }
+                } else {
+                    // public trade
+                    if (won) {
+                        balance += payout;
+                        updateBalanceUI();
+                        showToast(`You won $${payout.toFixed(2)}! Withdraw to M-Pesa.`, true);
+                    } else {
+                        balance -= amount;
+                        updateBalanceUI();
+                        showToast(`Trade lost: -$${amount.toFixed(2)}`, false);
+                    }
+                }
+                return trade;
+            }
+
+            // Render admin table
+            function renderAdminTable() {
+                if (!isAdmin) return;
+                if (trades.length === 0) {
+                    adminTradeTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#64748b; padding:1.5rem;">No trades yet</td></tr>`;
+                    return;
+                }
+                let html = '';
+                trades.slice().reverse().forEach(t => {
+                    const resultText = t.result ? 'Won' : 'Lost';
+                    const statusClass = t.result ? 'status-won' : 'status-lost';
+                    const payoutStr = t.result ? formatMoney(t.payout) : '—';
+                    html += `<tr>
+                        <td>${t.trader} ${t.isAdmin ? '<span style="color:#a78bfa;font-size:0.7rem;">(admin)</span>' : ''}</td>
+                        <td>${t.type}</td>
+                        <td>${formatMoney(t.amount)}</td>
+                        <td><span class="status-badge ${statusClass}">${resultText}</span></td>
+                        <td>${payoutStr}</td>
+                    </tr>`;
+                });
+                adminTradeTableBody.innerHTML = html;
+            }
+
+            // Show/hide admin panel and update role
+            function setAdminMode(admin) {
+                isAdmin = admin;
+                if (isAdmin) {
+                    userRoleLabel.textContent = 'Admin';
+                    roleToggle.textContent = 'Switch to Trader';
+                    roleToggle.classList.add('admin-active');
+                    winrateDisplay.textContent = 'Win rate: 90%';
+                    adminPanel.style.display = 'block';
+                    renderAdminTable();
+                } else {
+                    userRoleLabel.textContent = 'Trader';
+                    roleToggle.textContent = 'Switch to Admin';
+                    roleToggle.classList.remove('admin-active');
+                    winrateDisplay.textContent = 'Win rate: 10%';
+                    adminPanel.style.display = 'none';
+                }
+            }
+
+            // Modal handling for deposit/withdraw
+            function openMpesaModal(type) {
+                currentAction = type;
+                if (type === 'deposit') {
+                    modalTitle.innerHTML = '<i class="fas fa-mobile-alt" style="color:#00c076;"></i> Deposit via M-Pesa';
+                    modalSubtitle.textContent = 'Enter amount to deposit directly from your M-Pesa account.';
+                    mpesaAmount.value = 100;
+                } else {
+                    modalTitle.innerHTML = '<i class="fas fa-mobile-alt" style="color:#fbbf24;"></i> Withdraw to M-Pesa';
+                    modalSubtitle.textContent = 'Enter amount to withdraw to your M-Pesa account.';
+                    // Prefill with current balance if >0
+                    mpesaAmount.value = balance > 0 ? Math.min(balance, 1000).toFixed(0) : 100;
+                }
+                mpesaModal.classList.add('active');
+            }
+
+            function closeMpesaModal() {
+                mpesaModal.classList.remove('active');
+                currentAction = null;
+            }
+
+            // execute M-Pesa transaction
+            function executeMpesaTransaction() {
+                const amount = parseFloat(mpesaAmount.value);
+                const phone = mpesaPhone.value.trim();
+
+                if (isNaN(amount) || amount <= 0) {
+                    showToast('Enter a valid amount', false);
+                    return;
+                }
+                if (!phone || phone.length < 8) {
+                    showToast('Enter a valid M-Pesa number', false);
+                    return;
+                }
+
+                if (currentAction === 'deposit') {
+                    // Deposit: increase balance, unlimited
+                    balance += amount;
+                    updateBalanceUI();
+                    showToast(`Deposited $${amount.toFixed(2)} from M-Pesa`, true);
+                } else if (currentAction === 'withdraw') {
+                    if (amount > balance) {
+                        showToast('Insufficient funds for withdrawal', false);
+                        return;
+                    }
+                    balance -= amount;
+                    updateBalanceUI();
+                    showToast(`Withdrew $${amount.toFixed(2)} to M-Pesa (${phone})`, true);
+                }
+                closeMpesaModal();
+            }
+
+            // ---------- Event Listeners ----------
+            // Role toggle
+            roleToggle.addEventListener('click', () => {
+                setAdminMode(!isAdmin);
+            });
+
+            // Deposit / Withdraw open modals
+            document.getElementById('depositBtn').addEventListener('click', () => openMpesaModal('deposit'));
+            document.getElementById('withdrawBtn').addEventListener('click', () => openMpesaModal('withdraw'));
+
+            // Modal cancel and confirm
+            modalCancel.addEventListener('click', closeMpesaModal);
+            modalConfirm.addEventListener('click', executeMpesaTransaction);
+            mpesaModal.addEventListener('click', (e) => {
+                if (e.target === mpesaModal) closeMpesaModal();
+            });
+
+            // Public trading (Buy/Sell) - only when not admin? we can allow both, but admin trade uses different button.
+            // For public, we attach to main buy/sell.
+            document.getElementById('buyBtn').addEventListener('click', () => {
+                if (isAdmin) {
+                    // If admin clicks buy/sell, treat as admin trade? but we have separate admin button.
+                    // To avoid confusion, we make it act as admin trade with 90% win.
+                    const amount = 50;
+                    if (balance < amount) {
+                        showToast('Admin: deposit first or use admin trade simulation', false);
+                        return;
+                    }
+                    recordTrade('Admin (you)', 'Buy / Long', amount, true);
+                } else {
+                    // public
+                    if (balance < 50) {
+                        showToast('Insufficient balance. Deposit via M-Pesa.', false);
+                        return;
+                    }
+                    recordTrade('You (trader)', 'Buy / Long', 50, false);
+                }
+            });
+
+            document.getElementById('sellBtn').addEventListener('click', () => {
+                if (isAdmin) {
+                    const amount = 50;
+                    if (balance < amount) {
+                        showToast('Admin: deposit first or use admin trade simulation', false);
+                        return;
+                    }
+                    recordTrade('Admin (you)', 'Sell / Short', amount, true);
+                } else {
+                    if (balance < 50) {
+                        showToast('Insufficient balance. Deposit via M-Pesa.', false);
+                        return;
+                    }
+                    recordTrade('You (trader)', 'Sell / Short', 50, false);
+                }
+            });
+
+            // Admin trade simulation button (90% win)
+            document.getElementById('adminTradeBtn').addEventListener('click', () => {
+                if (!isAdmin) {
+                    showToast('Switch to admin mode first', false);
+                    return;
+                }
+                const amount = 100; // fixed amount
+                if (balance < amount) {
+                    showToast('Admin balance low. Deposit via M-Pesa (admin).', false);
+                    return;
+                }
+                recordTrade('Admin (you)', 'Buy / Long', amount, true);
+            });
+
+            // Initialize UI
+            updateBalanceUI();
+            setAdminMode(false);
+            // Seed some demo trades for visual
+            trades = [
+                { id: nextTradeId++, trader: 'John (trader)', type: 'Buy / Long', amount: 200, result: false, payout: 0, isAdmin: false },
+                { id: nextTradeId++, trader: 'Admin (you)', type: 'Sell / Short', amount: 150, result: true, payout: 300, isAdmin: true },
+                { id: nextTradeId++, trader: 'Mary (trader)', type: 'Buy / Long', amount: 50, result: true, payout: 100, isAdmin: false },
+            ];
+            // adjust admin balance based on seeded admin trade? not necessary.
+            renderAdminTable();
+
+            // Quick helper: if admin toggled, render
+            // set initial balance maybe 250 for demo
+            balance = 250.00;
+            updateBalanceUI();
+            // but for public winrate, we show 10%
+            console.log('Platform ready. Admin mode toggle available.');
+        })();
+    </script>
+</body>
+</html>
