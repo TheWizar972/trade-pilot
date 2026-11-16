@@ -1,1265 +1,869 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>NEXA Exchange | Professional Crypto Trading</title>
-  <!-- Google Fonts & Font Awesome -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #0a0e17;
-      color: #e5e9f0;
-      line-height: 1.5;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    /* Light theme variables */
-    .light-theme {
-      background-color: #f5f7fb;
-      color: #1a1f2e;
-    }
-
-    .light-theme .card,
-    .light-theme .auth-card,
-    .light-theme .sidebar,
-    .light-theme .trade-panel,
-    .light-theme .wallet-panel {
-      background: #ffffff;
-      border-color: #dce2ec;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
-    }
-
-    .light-theme .stat-value,
-    .light-theme .market-price,
-    .light-theme .coin-symbol {
-      color: #0b0f1a;
-    }
-
-    .light-theme .nav-item:hover,
-    .light-theme .nav-item.active {
-      background: #eef2f9;
-      color: #1e3a8a;
-    }
-
-    .light-theme .btn-outline {
-      border-color: #cbd5e1;
-      color: #1e293b;
-    }
-
-    .light-theme .btn-outline:hover {
-      background: #f1f5f9;
-    }
-
-    .light-theme .table th {
-      color: #475569;
-    }
-
-    .light-theme .table td {
-      border-bottom-color: #e2e8f0;
-    }
-
-    /* ===== LAYOUT & UTILS ===== */
-    .app {
-      display: flex;
-      min-height: 100vh;
-      flex-direction: column;
-    }
-
-    .dashboard-layout {
-      display: flex;
-      flex: 1;
-    }
-
-    .sidebar {
-      width: 260px;
-      background: #111827;
-      border-right: 1px solid #1f2a3f;
-      padding: 1.5rem 1rem;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.2s;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 1.5rem 2rem;
-      overflow-y: auto;
-      background: #0a0e17;
-    }
-
-    .light-theme .main-content {
-      background: #f5f7fb;
-    }
-
-    /* ===== TYPOGRAPHY & COLORS ===== */
-    .text-accent {
-      color: #3b82f6;
-    }
-
-    .text-success {
-      color: #10b981;
-    }
-
-    .text-danger {
-      color: #ef4444;
-    }
-
-    .text-muted {
-      color: #94a3b8;
-    }
-
-    .light-theme .text-muted {
-      color: #64748b;
-    }
-
-    .badge {
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 0.25rem 0.6rem;
-      border-radius: 30px;
-      background: #1e293b;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-    }
-
-    .badge-success {
-      background: #064e3b;
-      color: #a7f3d0;
-    }
-
-    /* ===== CARDS ===== */
-    .card {
-      background: #111827;
-      border: 1px solid #1f2a3f;
-      border-radius: 1rem;
-      padding: 1.25rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transition: transform 0.15s, border-color 0.2s;
-    }
-
-    .card:hover {
-      border-color: #2d3b52;
-    }
-
-    .stat-value {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -0.02em;
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* ===== BUTTONS ===== */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      padding: 0.6rem 1.2rem;
-      border-radius: 0.75rem;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border: none;
-      transition: all 0.15s;
-      background: #1e293b;
-      color: #e5e9f0;
-    }
-
-    .btn-primary {
-      background: #2563eb;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #1d4ed8;
-    }
-
-    .btn-success {
-      background: #10b981;
-      color: #0a0e17;
-    }
-
-    .btn-success:hover {
-      background: #059669;
-    }
-
-    .btn-danger {
-      background: #ef4444;
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: #dc2626;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 1px solid #2d3b52;
-      color: #e5e9f0;
-    }
-
-    .btn-outline:hover {
-      background: #1f2a3f;
-    }
-
-    .btn-sm {
-      padding: 0.35rem 0.9rem;
-      font-size: 0.8rem;
-      border-radius: 0.5rem;
-    }
-
-    /* ===== AUTH MODAL / SCREENS ===== */
-    .auth-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 1rem;
-    }
-
-    .auth-card {
-      background: #111827;
-      border: 1px solid #1f2a3f;
-      border-radius: 2rem;
-      max-width: 440px;
-      width: 100%;
-      padding: 2rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-    }
-
-    .auth-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .auth-header h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-
-    .auth-header p {
-      color: #94a3b8;
-      font-size: 0.9rem;
-      margin-top: 0.4rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #94a3b8;
-      margin-bottom: 0.4rem;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      background: #0a0e17;
-      border: 1px solid #1f2a3f;
-      border-radius: 0.75rem;
-      color: #e5e9f0;
-      font-size: 0.95rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    }
-
-    .code-input {
-      letter-spacing: 0.5rem;
-      font-weight: 600;
-      text-align: center;
-      font-size: 1.4rem !important;
-    }
-
-    .auth-footer {
-      text-align: center;
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
-      color: #94a3b8;
-    }
-
-    .auth-footer a {
-      color: #3b82f6;
-      text-decoration: none;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .timer-text {
-      font-size: 0.8rem;
-      color: #94a3b8;
-      text-align: center;
-      margin-top: 0.5rem;
-    }
-
-    .error-msg {
-      color: #f87171;
-      font-size: 0.8rem;
-      margin-top: 0.4rem;
-      display: none;
-    }
-
-    /* ===== NAVIGATION ===== */
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 2.5rem;
-      padding-left: 0.5rem;
-    }
-
-    .logo-icon {
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.2rem;
-      color: white;
-    }
-
-    .logo-text {
-      font-weight: 700;
-      font-size: 1.2rem;
-      letter-spacing: -0.02em;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-      padding: 0.75rem 1rem;
-      border-radius: 0.75rem;
-      color: #94a3b8;
-      font-weight: 500;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.15s;
-      margin-bottom: 0.25rem;
-    }
-
-    .nav-item i {
-      width: 1.2rem;
-      text-align: center;
-    }
-
-    .nav-item:hover,
-    .nav-item.active {
-      background: #1e293b;
-      color: #ffffff;
-    }
-
-    .nav-item.active i {
-      color: #3b82f6;
-    }
-
-    .spacer {
-      flex: 1;
-    }
-
-    .user-profile-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 0.5rem;
-      border-top: 1px solid #1f2a3f;
-      margin-top: 1rem;
-    }
-
-    .avatar {
-      width: 36px;
-      height: 36px;
-      background: #1e293b;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: #3b82f6;
-    }
-
-    /* ===== MARKET TABLE ===== */
-    .market-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    .market-table th {
-      text-align: left;
-      padding: 0.75rem 0.5rem;
-      color: #94a3b8;
-      font-weight: 500;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      border-bottom: 1px solid #1f2a3f;
-    }
-
-    .market-table td {
-      padding: 0.9rem 0.5rem;
-      border-bottom: 1px solid #1a2332;
-    }
-
-    .coin-symbol {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 600;
-    }
-
-    .coin-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #1e293b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    /* ===== TRADING INTERFACE ===== */
-    .trade-panel {
-      background: #111827;
-      border-radius: 1rem;
-      padding: 1.5rem;
-      border: 1px solid #1f2a3f;
-    }
-
-    .pair-selector {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-    }
-
-    .pair-btn {
-      padding: 0.5rem 1rem;
-      border-radius: 2rem;
-      background: #0a0e17;
-      border: 1px solid #1f2a3f;
-      color: #94a3b8;
-      font-weight: 500;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .pair-btn.active {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: white;
-    }
-
-    .order-type-tabs {
-      display: flex;
-      gap: 1rem;
-      border-bottom: 1px solid #1f2a3f;
-      margin-bottom: 1.5rem;
-    }
-
-    .order-type-tab {
-      padding: 0.5rem 0;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #94a3b8;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.15s;
-    }
-
-    .order-type-tab.active {
-      color: #3b82f6;
-      border-bottom-color: #3b82f6;
-    }
-
-    /* ===== WALLET ===== */
-    .wallet-asset-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.9rem 0;
-      border-bottom: 1px solid #1f2a3f;
-    }
-
-    .wallet-asset-row:last-child {
-      border-bottom: none;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 1024px) {
-      .sidebar {
-        width: 220px;
-        padding: 1rem 0.75rem;
-      }
-      .main-content {
-        padding: 1.25rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .dashboard-layout {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        padding: 0.75rem 1rem;
-        border-right: none;
-        border-bottom: 1px solid #1f2a3f;
-      }
-      .logo-area {
-        margin-bottom: 0;
-        margin-right: 1rem;
-      }
-      .nav-item {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.8rem;
-      }
-      .spacer {
-        display: none;
-      }
-      .user-profile-badge {
-        border-top: none;
-        margin-top: 0;
-        margin-left: auto;
-      }
-      .auth-card {
-        padding: 1.5rem;
-        border-radius: 1.5rem;
-      }
-      .stat-value {
-        font-size: 1.4rem;
-      }
-    }
-
-    /* Hidden utility */
-    .hidden {
-      display: none !important;
-    }
-
-    .visible {
-      display: block !important;
-    }
-
-    /* Loading spinner */
-    .spinner {
-      width: 1.2rem;
-      height: 1.2rem;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      display: inline-block;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Simulated tag */
-    .sim-tag {
-      background: #1e293b;
-      color: #94a3b8;
-      font-size: 0.65rem;
-      font-weight: 600;
-      padding: 0.2rem 0.6rem;
-      border-radius: 30px;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      border: 1px solid #2d3b52;
-    }
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Kestrel Trade — Demo Trading Platform</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0b0f14; --bg-2:#111823; --card:#151d29; --line:#1f2a3a;
+  --txt:#e8eef7; --muted:#8ea3bd; --brand:#0ea5e9; --brand-2:#22d3ee;
+  --up:#10b981; --down:#ef4444; --warn:#f59e0b;
+  --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.35);
+  --font:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#f5f7fb; --bg-2:#ffffff; --card:#ffffff; --line:#e2e8f0;
+  --txt:#0f172a; --muted:#64748b;
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,select{font:inherit;width:100%;padding:12px 14px;background:var(--bg-2);border:1px solid var(--line);border-radius:10px;color:var(--txt);outline:none;transition:border .2s,box-shadow .2s}
+input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(14,165,233,.15)}
+.btn{padding:12px 18px;border-radius:10px;font-weight:600;transition:transform .06s,filter .2s;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#04141f}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--txt)}
+.btn-danger{background:var(--down);color:#fff}
+.btn-block{width:100%}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.grid{display:grid;gap:16px}
+.row{display:flex;gap:12px;align-items:center}
+.between{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.tag{font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(14,165,233,.12);color:var(--brand)}
+.tag-up{background:rgba(16,185,129,.12);color:var(--up)}
+.tag-down{background:rgba(239,68,68,.12);color:var(--down)}
+
+/* Layout */
+#app{min-height:100%;display:flex;flex-direction:column}
+header.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1280px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+.brand .logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;color:#04141f;font-weight:900}
+nav.main{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+nav.main a{padding:8px 12px;border-radius:8px;color:var(--muted);font-weight:500;font-size:14px}
+nav.main a:hover{background:var(--bg-2);color:var(--txt)}
+nav.main a.active{color:var(--txt);background:var(--bg-2)}
+.icon-btn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;border:1px solid var(--line);background:var(--bg-2)}
+.icon-btn:hover{border-color:var(--brand)}
+.hamburger{display:none}
+
+main{flex:1;max-width:1280px;width:100%;margin:0 auto;padding:24px 20px 80px}
+.view{display:none;animation:fade .35s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Landing */
+.hero{padding:60px 0 40px;text-align:center}
+.hero h1{font-size:clamp(32px,5vw,56px);line-height:1.05;font-weight:800;letter-spacing:-1px;margin-bottom:16px}
+.hero h1 span{background:linear-gradient(135deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);max-width:640px;margin:0 auto 24px;font-size:18px}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:60px}
+
+/* Auth */
+.auth-wrap{max-width:420px;margin:40px auto}
+.auth-card{animation:fade .4s ease}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:500}
+.field .err{color:var(--down);font-size:12px;margin-top:6px;display:none}
+.field.invalid input{border-color:var(--down)}
+.field.invalid .err{display:block}
+.otp-row{display:flex;gap:8px;justify-content:center;margin:20px 0}
+.otp-row input{width:52px;height:58px;text-align:center;font-size:24px;font-weight:700;padding:0}
+.otp-row input:focus{transform:scale(1.05)}
+.method-tabs{display:flex;gap:8px;margin-bottom:16px;background:var(--bg-2);padding:4px;border-radius:10px}
+.method-tabs button{flex:1;padding:10px;border-radius:8px;font-weight:600;color:var(--muted);font-size:14px;transition:.2s}
+.method-tabs button.active{background:var(--card);color:var(--txt);box-shadow:var(--shadow)}
+
+/* Dashboard */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.stat{padding:16px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.stat .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.stat .value{font-size:22px;font-weight:700;margin-top:6px}
+.stat .delta{font-size:12px;margin-top:4px}
+
+.dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+@media(max-width:900px){.dash-grid{grid-template-columns:1fr}}
+
+.market-row{display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--line)}
+.market-row:last-child{border:0}
+.market-row:hover{background:var(--bg-2);border-radius:8px}
+.sym{font-weight:700}
+.sym small{color:var(--muted);font-weight:400;margin-left:4px}
+
+.table{width:100%;border-collapse:collapse;font-size:14px}
+.table th{text-align:left;padding:10px 8px;color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase;border-bottom:1px solid var(--line)}
+.table td{padding:12px 8px;border-bottom:1px solid var(--line)}
+.table tr:last-child td{border:0}
+
+/* Toasts */
+#toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:999}
+.toast{padding:14px 18px;border-radius:10px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);min-width:260px;animation:slideIn .3s ease;border-left:4px solid var(--brand)}
+.toast.ok{border-left-color:var(--up)}
+.toast.err{border-left-color:var(--down)}
+.toast.warn{border-left-color:var(--warn)}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:none;opacity:1}}
+
+/* Banner */
+.banner{padding:10px 14px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);border-radius:10px;color:#f59e0b;font-size:13px;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+
+/* Mobile */
+@media(max-width:720px){
+  .hamburger{display:grid}
+  nav.main{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--line);flex-direction:column;padding:12px;gap:4px}
+  nav.main.open{display:flex}
+  nav.main a{width:100%}
+  .hero{padding:30px 0}
+  .otp-row input{width:44px;height:52px;font-size:20px}
+}
+.skeleton{background:linear-gradient(90deg,var(--bg-2) 25%,var(--line) 50%,var(--bg-2) 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:8px;height:14px}
+@keyframes sk{to{background-position:-200% 0}}
+</style>
 </head>
 <body>
-  <div class="app" id="app">
-    <!-- AUTH SCREEN (default visible) -->
-    <div id="authScreen" class="auth-overlay">
-      <div class="auth-card fade-in" id="authCard">
-        <!-- Dynamic content -->
+<div id="app">
+
+  <header class="top">
+    <div class="top-inner">
+      <a href="#" class="brand" data-nav="landing">
+        <div class="logo">K</div> Kestrel<span class="muted small" style="margin-left:6px;font-weight:400">DEMO</span>
+      </a>
+      <nav class="main" id="mainnav">
+        <a href="#" data-nav="landing" class="active">Home</a>
+        <a href="#" data-nav="markets">Markets</a>
+        <a href="#" data-nav="dashboard">Dashboard</a>
+        <a href="#" data-nav="trade">Trade</a>
+        <a href="#" data-nav="profile">Profile</a>
+      </nav>
+      <div class="row">
+        <button class="icon-btn" id="themeBtn" title="Toggle theme">🌓</button>
+        <button class="icon-btn hamburger" id="navToggle">☰</button>
+        <button class="btn btn-ghost" data-nav="login" id="loginBtn">Log in</button>
+        <button class="btn btn-primary" data-nav="register" id="regBtn">Get started</button>
+        <button class="btn btn-ghost" id="logoutBtn" style="display:none">Log out</button>
       </div>
     </div>
+  </header>
 
-    <!-- DASHBOARD (initially hidden) -->
-    <div id="dashboardScreen" class="dashboard-layout hidden">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="logo-area">
-          <div class="logo-icon">N</div>
-          <span class="logo-text">NEXA</span>
+  <main>
+
+    <!-- LANDING -->
+    <section class="view active" id="view-landing">
+      <div class="hero">
+        <span class="tag">Simulated data · Educational demo</span>
+        <h1 style="margin-top:14px">Trade smarter.<br/>Learn <span>without risk.</span></h1>
+        <p>A modern demo-trading platform with real-market-style charts, watchlists and a full dashboard — no deposits, no real money, just skill building.</p>
+        <div class="cta">
+          <button class="btn btn-primary" data-nav="register">Create free account</button>
+          <button class="btn btn-ghost" data-nav="markets">Explore markets</button>
         </div>
-        <div class="nav-item active" data-view="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</div>
-        <div class="nav-item" data-view="trade"><i class="fas fa-chart-line"></i> Trade</div>
-        <div class="nav-item" data-view="wallet"><i class="fas fa-wallet"></i> Wallet</div>
-        <div class="nav-item" data-view="profile"><i class="fas fa-user-shield"></i> Profile</div>
-        <div class="spacer"></div>
-        <div class="user-profile-badge">
-          <div class="avatar" id="userAvatar">JD</div>
-          <div style="flex:1; font-size:0.85rem;">
-            <div id="sidebarUserName" style="font-weight:600;">John Doe</div>
-            <div class="text-muted" style="font-size:0.7rem;">Verified</div>
-          </div>
-          <button class="btn btn-sm btn-outline" id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+      <div class="features">
+        <div class="card"><h3>📈 Realistic charts</h3><p class="muted small" style="margin-top:8px">Live-style candlestick and line charts powered by simulated tick data.</p></div>
+        <div class="card"><h3>🔐 Two-step verification</h3><p class="muted small" style="margin-top:8px">Email or SMS codes, 5-minute expiry, resend protection.</p></div>
+        <div class="card"><h3>💼 Portfolio tracking</h3><p class="muted small" style="margin-top:8px">Buy, sell, watch your P&L update in real time on a demo balance.</p></div>
+        <div class="card"><h3>🌗 Light & dark</h3><p class="muted small" style="margin-top:8px">Beautiful UI in both themes, fully responsive across devices.</p></div>
+      </div>
+    </section>
+
+    <!-- REGISTER -->
+    <section class="view" id="view-register">
+      <div class="auth-wrap">
+        <div class="card auth-card">
+          <h2 style="margin-bottom:6px">Create your account</h2>
+          <p class="muted small" style="margin-bottom:20px">Demo only — no real money involved.</p>
+          <form id="regForm" novalidate>
+            <div class="field" data-f="name"><label>Full name</label><input name="name" autocomplete="name" placeholder="Jane Doe"/><div class="err">Enter your full name (2+ chars).</div></div>
+            <div class="field" data-f="email"><label>Email</label><input name="email" type="email" autocomplete="email" placeholder="you@example.com"/><div class="err">Enter a valid email.</div></div>
+            <div class="field" data-f="phone"><label>Phone (with country code)</label><input name="phone" autocomplete="tel" placeholder="+254712345678"/><div class="err">Enter a valid international phone, e.g. +254712345678.</div></div>
+            <div class="field" data-f="password"><label>Password</label><input name="password" type="password" autocomplete="new-password" placeholder="Min 8 chars, 1 letter + 1 number"/><div class="err">Password must be 8+ chars with letters and numbers.</div></div>
+            <button class="btn btn-primary btn-block" type="submit">Create account</button>
+          </form>
+          <p class="small muted" style="margin-top:16px;text-align:center">Already have one? <a href="#" data-nav="login" style="color:var(--brand)">Log in</a></p>
         </div>
-      </aside>
+      </div>
+    </section>
 
-      <!-- Main content area -->
-      <main class="main-content" id="mainContent">
-        <!-- Views injected by JS -->
-      </main>
-    </div>
-  </div>
+    <!-- LOGIN -->
+    <section class="view" id="view-login">
+      <div class="auth-wrap">
+        <div class="card auth-card">
+          <h2 style="margin-bottom:6px">Welcome back</h2>
+          <p class="muted small" style="margin-bottom:20px">Use your email or phone.</p>
+          <form id="loginForm" novalidate>
+            <div class="field" data-f="identifier"><label>Email or phone</label><input name="identifier" placeholder="you@example.com"/><div class="err">Enter your email or phone.</div></div>
+            <div class="field" data-f="password"><label>Password</label><input name="password" type="password" placeholder="Your password"/><div class="err">Enter your password.</div></div>
+            <button class="btn btn-primary btn-block" type="submit">Continue</button>
+          </form>
+          <p class="small muted" style="margin-top:16px;text-align:center"><a href="#" data-nav="reset" style="color:var(--brand)">Forgot password?</a></p>
+          <div class="banner" style="margin-top:16px">ℹ️ Demo account: <b>demo@kestrel.io</b> / <b>demo1234</b></div>
+        </div>
+      </div>
+    </section>
 
-  <script>
-    (function() {
-      // ========== SIMULATED STATE ==========
-      const state = {
-        currentUser: null,
-        authStep: 'login', // login | register | forgot | verify2fa | resetPassword
-        pendingEmail: '',
-        pendingPhone: '',
-        pendingFullName: '',
-        verificationCode: null,
-        verificationMethod: 'email',
-        codeExpiry: null,
-        resendTimer: 30,
-        attempts: 0,
-        locked: false,
-        activeView: 'dashboard',
-        theme: 'dark',
-        balances: {
-          usdt: 25420.80,
-          btc: 0.428,
-          eth: 3.15,
-          sol: 12.5,
-        },
-        transactions: [
-          { type: 'Deposit', asset: 'USDT', amount: 5000, status: 'Completed', date: '2025-03-28' },
-          { type: 'Trade', asset: 'BTC', amount: 0.05, status: 'Completed', date: '2025-03-27' },
-          { type: 'Withdraw', asset: 'ETH', amount: 1.2, status: 'Pending', date: '2025-03-26' },
-        ],
-        openOrders: [
-          { pair: 'BTC/USDT', side: 'Buy', price: 64200, amount: 0.02, status: 'Open' },
-          { pair: 'ETH/USDT', side: 'Sell', price: 3350, amount: 1.5, status: 'Open' },
-        ],
-        orderHistory: [
-          { pair: 'BTC/USDT', side: 'Sell', price: 65200, amount: 0.01, status: 'Filled', date: '2025-03-25' },
-          { pair: 'SOL/USDT', side: 'Buy', price: 142.5, amount: 5, status: 'Filled', date: '2025-03-24' },
-        ],
-        marketData: [
-          { symbol: 'BTC', name: 'Bitcoin', price: 64382.20, change: 2.34 },
-          { symbol: 'ETH', name: 'Ethereum', price: 3348.15, change: 1.87 },
-          { symbol: 'SOL', name: 'Solana', price: 142.80, change: -0.92 },
-          { symbol: 'XRP', name: 'Ripple', price: 0.524, change: 0.45 },
-        ],
-        loginHistory: [
-          { device: 'Chrome on macOS', ip: '192.168.1.1', date: '2025-03-29 10:23', status: 'Success' },
-          { device: 'Safari on iPhone', ip: '192.168.1.5', date: '2025-03-28 18:12', status: 'Success' },
-        ],
-        activeSessions: [
-          { device: 'Chrome on macOS', ip: '192.168.1.1', lastActive: 'Now', current: true },
-          { device: 'Safari on iPhone', ip: '192.168.1.5', lastActive: '2 hours ago', current: false },
-        ],
-      };
+    <!-- RESET -->
+    <section class="view" id="view-reset">
+      <div class="auth-wrap">
+        <div class="card auth-card">
+          <h2 style="margin-bottom:6px">Reset password</h2>
+          <p class="muted small" style="margin-bottom:20px">We'll email you a link (simulated in this demo).</p>
+          <form id="resetForm" novalidate>
+            <div class="field" data-f="email"><label>Email</label><input name="email" type="email" placeholder="you@example.com"/><div class="err">Enter a valid email.</div></div>
+            <button class="btn btn-primary btn-block">Send reset link</button>
+          </form>
+          <p class="small muted" style="margin-top:16px;text-align:center"><a href="#" data-nav="login" style="color:var(--brand)">Back to login</a></p>
+        </div>
+      </div>
+    </section>
 
-      // DOM elements
-      const authScreen = document.getElementById('authScreen');
-      const authCard = document.getElementById('authCard');
-      const dashboardScreen = document.getElementById('dashboardScreen');
-      const mainContent = document.getElementById('mainContent');
-      const userAvatar = document.getElementById('userAvatar');
-      const sidebarUserName = document.getElementById('sidebarUserName');
-      const logoutBtn = document.getElementById('logoutBtn');
-
-      // ========== HELPER FUNCTIONS ==========
-      function renderAuth() {
-        let html = '';
-        const s = state;
-        if (s.authStep === 'login') {
-          html = `
-            <div class="auth-header">
-              <h2>Welcome back</h2>
-              <p>Sign in to your NEXA account</p>
-            </div>
-            <form id="loginForm">
-              <div class="form-group">
-                <label>Email or Phone</label>
-                <input type="text" id="loginEmail" placeholder="you@example.com" value="demo@nexa.io" required>
-              </div>
-              <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="loginPassword" placeholder="••••••••" value="password123" required>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.85rem; color:#94a3b8; text-transform:none;">
-                  <input type="checkbox" id="rememberMe" checked style="width:auto;"> Remember me
-                </label>
-                <a id="forgotLink" style="color:#3b82f6; font-size:0.85rem; cursor:pointer;">Forgot?</a>
-              </div>
-              <button type="submit" class="btn btn-primary" style="width:100%;">Sign in</button>
-            </form>
-            <div class="auth-footer">
-              Don't have an account? <a id="goRegister">Create one</a>
-            </div>
-          `;
-          authCard.innerHTML = html;
-          document.getElementById('loginForm').addEventListener('submit', handleLogin);
-          document.getElementById('goRegister').addEventListener('click', () => { state.authStep = 'register'; renderAuth(); });
-          document.getElementById('forgotLink').addEventListener('click', () => { state.authStep = 'forgot'; renderAuth(); });
-        } else if (s.authStep === 'register') {
-          html = `
-            <div class="auth-header">
-              <h2>Create account</h2>
-              <p>Start your trading journey</p>
-            </div>
-            <form id="registerForm">
-              <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="regName" placeholder="John Doe" value="John Doe" required>
-              </div>
-              <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="regEmail" placeholder="you@example.com" value="demo@nexa.io" required>
-              </div>
-              <div class="form-group">
-                <label>Phone Number</label>
-                <input type="tel" id="regPhone" placeholder="+1 234 567 890" value="+15551234567" required>
-              </div>
-              <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="regPassword" placeholder="••••••••" value="password123" required>
-              </div>
-              <button type="submit" class="btn btn-primary" style="width:100%;">Register</button>
-            </form>
-            <div class="auth-footer">
-              Already have an account? <a id="goLogin">Sign in</a>
-            </div>
-          `;
-          authCard.innerHTML = html;
-          document.getElementById('registerForm').addEventListener('submit', handleRegister);
-          document.getElementById('goLogin').addEventListener('click', () => { state.authStep = 'login'; renderAuth(); });
-        } else if (s.authStep === 'forgot') {
-          html = `
-            <div class="auth-header">
-              <h2>Reset password</h2>
-              <p>We'll send a reset code to your email</p>
-            </div>
-            <form id="forgotForm">
-              <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="forgotEmail" placeholder="you@example.com" value="demo@nexa.io" required>
-              </div>
-              <button type="submit" class="btn btn-primary" style="width:100%;">Send reset code</button>
-            </form>
-            <div class="auth-footer">
-              <a id="backToLogin">Back to login</a>
-            </div>
-          `;
-          authCard.innerHTML = html;
-          document.getElementById('forgotForm').addEventListener('submit', handleForgot);
-          document.getElementById('backToLogin').addEventListener('click', () => { state.authStep = 'login'; renderAuth(); });
-        } else if (s.authStep === 'verify2fa') {
-          const methodLabel = s.verificationMethod === 'email' ? 'Email' : 'SMS';
-          html = `
-            <div class="auth-header">
-              <h2>Two-step verification</h2>
-              <p>Enter the 6-digit code sent to your ${methodLabel.toLowerCase()}</p>
-              <p style="font-size:0.8rem; color:#64748b; margin-top:0.3rem;">${s.verificationMethod === 'email' ? s.pendingEmail : s.pendingPhone}</p>
-            </div>
-            <form id="verifyForm">
-              <div class="form-group">
-                <label>Verification code</label>
-                <input type="text" id="codeInput" class="code-input" maxlength="6" placeholder="000000" inputmode="numeric" autocomplete="one-time-code" required>
-              </div>
-              <div id="codeError" class="error-msg"></div>
-              <button type="submit" class="btn btn-primary" style="width:100%;">Verify</button>
-            </form>
-            <div class="timer-text" id="timerText">Resend available in ${s.resendTimer}s</div>
-            <div style="text-align:center; margin-top:1rem;">
-              <button class="btn btn-sm btn-outline" id="switchMethod">
-                Use ${s.verificationMethod === 'email' ? 'SMS' : 'Email'} instead
-              </button>
-            </div>
-            <div class="auth-footer">
-              <a id="backToLoginFrom2fa">Cancel and go back</a>
-            </div>
-          `;
-          authCard.innerHTML = html;
-          document.getElementById('verifyForm').addEventListener('submit', handleVerify);
-          document.getElementById('switchMethod').addEventListener('click', () => {
-            state.verificationMethod = state.verificationMethod === 'email' ? 'sms' : 'email';
-            generateAndSendCode();
-            renderAuth();
-          });
-          document.getElementById('backToLoginFrom2fa').addEventListener('click', () => {
-            state.authStep = 'login';
-            state.pendingEmail = '';
-            state.pendingPhone = '';
-            renderAuth();
-          });
-          startResendTimer();
-        } else if (s.authStep === 'resetPassword') {
-          html = `
-            <div class="auth-header">
-              <h2>New password</h2>
-              <p>Enter your new password</p>
-            </div>
-            <form id="resetForm">
-              <div class="form-group">
-                <label>New Password</label>
-                <input type="password" id="newPassword" placeholder="••••••••" required>
-              </div>
-              <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" id="confirmPassword" placeholder="••••••••" required>
-              </div>
-              <div id="resetError" class="error-msg"></div>
-              <button type="submit" class="btn btn-primary" style="width:100%;">Update password</button>
-            </form>
-            <div class="auth-footer">
-              <a id="backToLoginFromReset">Back to login</a>
-            </div>
-          `;
-          authCard.innerHTML = html;
-          document.getElementById('resetForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const np = document.getElementById('newPassword').value;
-            const cp = document.getElementById('confirmPassword').value;
-            if (np !== cp) {
-              document.getElementById('resetError').textContent = 'Passwords do not match.';
-              document.getElementById('resetError').style.display = 'block';
-              return;
-            }
-            alert('Password updated (simulated). You can now log in.');
-            state.authStep = 'login';
-            renderAuth();
-          });
-          document.getElementById('backToLoginFromReset').addEventListener('click', () => { state.authStep = 'login'; renderAuth(); });
-        }
-      }
-
-      // ========== AUTH HANDLERS ==========
-      function handleLogin(e) {
-        e.preventDefault();
-        const emailOrPhone = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
-        if (!emailOrPhone || !password) {
-          alert('Please fill in all fields.');
-          return;
-        }
-        // Simulate credential check. In production this would be a server call.
-        // Accept any values but require a known demo user or create one.
-        state.pendingEmail = emailOrPhone.includes('@') ? emailOrPhone : 'demo@nexa.io';
-        state.pendingPhone = emailOrPhone.includes('@') ? '+15551234567' : emailOrPhone;
-        state.pendingFullName = 'John Doe';
-        state.verificationMethod = 'email'; // default
-        generateAndSendCode();
-        state.authStep = 'verify2fa';
-        renderAuth();
-      }
-
-      function handleRegister(e) {
-        e.preventDefault();
-        const name = document.getElementById('regName').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const phone = document.getElementById('regPhone').value.trim();
-        const password = document.getElementById('regPassword').value;
-        if (!name || !email || !phone || !password) {
-          alert('Please fill in all fields.');
-          return;
-        }
-        state.pendingFullName = name;
-        state.pendingEmail = email;
-        state.pendingPhone = phone;
-        state.verificationMethod = 'email';
-        generateAndSendCode();
-        state.authStep = 'verify2fa';
-        renderAuth();
-      }
-
-      function handleForgot(e) {
-        e.preventDefault();
-        const email = document.getElementById('forgotEmail').value.trim();
-        if (!email) {
-          alert('Please enter your email.');
-          return;
-        }
-        // Simulate sending a reset code. In a real app, send an email.
-        alert('A password reset link has been sent to ' + email + ' (simulated).');
-        state.authStep = 'resetPassword';
-        renderAuth();
-      }
-
-      function generateAndSendCode() {
-        // Generate 6-digit code
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
-        state.verificationCode = code;
-        state.codeExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
-        state.resendTimer = 30;
-        state.attempts = 0;
-        // NEVER display the code in UI/logs in production. Here it's stored only in memory for demo.
-        // In a real app, this would be sent server-side via email/SMS.
-        console.log('Simulated code (do NOT log in production):', code); // Only for demo purpose
-      }
-
-      function startResendTimer() {
-        if (window.resendInterval) clearInterval(window.resendInterval);
-        window.resendInterval = setInterval(() => {
-          if (state.resendTimer > 0) {
-            state.resendTimer--;
-            const el = document.getElementById('timerText');
-            if (el) el.textContent = `Resend available in ${state.resendTimer}s`;
-          } else {
-            clearInterval(window.resendInterval);
-            const el = document.getElementById('timerText');
-            if (el) {
-              el.innerHTML = `<button class="btn btn-sm btn-outline" id="resendBtn">Resend code</button>`;
-              document.getElementById('resendBtn').addEventListener('click', () => {
-                generateAndSendCode();
-                renderAuth();
-              });
-            }
-          }
-        }, 1000);
-      }
-
-      function handleVerify(e) {
-        e.preventDefault();
-        const entered = document.getElementById('codeInput').value.trim();
-        const errorEl = document.getElementById('codeError');
-        if (!entered || entered.length !== 6) {
-          errorEl.textContent = 'Please enter a 6-digit code.';
-          errorEl.style.display = 'block';
-          return;
-        }
-        if (state.locked) {
-          errorEl.textContent = 'Too many attempts. Please wait and try again later.';
-          errorEl.style.display = 'block';
-          return;
-        }
-        if (Date.now() > state.codeExpiry) {
-          errorEl.textContent = 'Code expired. Please request a new one.';
-          errorEl.style.display = 'block';
-          return;
-        }
-        if (entered === state.verificationCode) {
-          // Success! Log in the user
-          state.currentUser = {
-            name: state.pendingFullName || 'John Doe',
-            email: state.pendingEmail || 'demo@nexa.io',
-            phone: state.pendingPhone || '+15551234567',
-          };
-          state.authStep = 'login';
-          // Hide auth screen, show dashboard
-          authScreen.classList.add('hidden');
-          dashboardScreen.classList.remove('hidden');
-          userAvatar.textContent = state.currentUser.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-          sidebarUserName.textContent = state.currentUser.name;
-          state.activeView = 'dashboard';
-          renderDashboardView();
-        } else {
-          state.attempts++;
-          if (state.attempts >= 3) {
-            state.locked = true;
-            errorEl.textContent = 'Account temporarily locked. Please try again later.';
-          } else {
-            errorEl.textContent = `Incorrect code. ${3 - state.attempts} attempts remaining.`;
-          }
-          errorEl.style.display = 'block';
-        }
-      }
-
-      // ========== DASHBOARD VIEWS ==========
-      function renderDashboardView() {
-        if (!state.currentUser) return;
-        const view = state.activeView;
-        if (view === 'dashboard') {
-          renderMainDashboard();
-        } else if (view === 'trade') {
-          renderTradeView();
-        } else if (view === 'wallet') {
-          renderWalletView();
-        } else if (view === 'profile') {
-          renderProfileView();
-        }
-        // Update active nav
-        document.querySelectorAll('.nav-item').forEach(item => {
-          item.classList.remove('active');
-          if (item.dataset.view === view) item.classList.add('active');
-        });
-      }
-
-      function renderMainDashboard() {
-        const totalUsd = state.balances.usdt + (state.balances.btc * 64382) + (state.balances.eth * 3348) + (state.balances.sol * 142.8);
-        const pnl = 1250.75;
-        mainContent.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
-            <div>
-              <h1 style="font-size:1.8rem; font-weight:700; letter-spacing:-0.02em;">Dashboard</h1>
-              <p class="text-muted">Welcome back, ${state.currentUser.name.split(' ')[0]}</p>
-            </div>
-            <div class="sim-tag"><i class="fas fa-flask"></i> Simulated Environment</div>
+    <!-- 2FA -->
+    <section class="view" id="view-2fa">
+      <div class="auth-wrap">
+        <div class="card auth-card">
+          <h2 style="margin-bottom:6px">Two-step verification</h2>
+          <p class="muted small" style="margin-bottom:16px" id="otpSubtitle">Choose how you want to receive your 6-digit code.</p>
+          <div class="method-tabs" id="methodTabs">
+            <button data-method="email" class="active">📧 Email</button>
+            <button data-method="sms">📱 SMS</button>
           </div>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:1.25rem; margin-bottom:2rem;">
-            <div class="card">
-              <div class="stat-label">Total Balance</div>
-              <div class="stat-value">$${totalUsd.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</div>
-            </div>
-            <div class="card">
-              <div class="stat-label">Available</div>
-              <div class="stat-value">$${state.balances.usdt.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</div>
-            </div>
-            <div class="card">
-              <div class="stat-label">Total P&L</div>
-              <div class="stat-value ${pnl >= 0 ? 'text-success' : 'text-danger'}">${pnl >= 0 ? '+' : ''}$${pnl.toLocaleString()}</div>
-            </div>
+          <div id="otpSendBlock">
+            <p class="small muted" id="otpDest">Code will be sent to your registered email.</p>
+            <button class="btn btn-primary btn-block" id="sendOtpBtn" style="margin-top:14px">Send code</button>
           </div>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:2rem;">
-            <div class="card">
-              <h3 style="margin-bottom:1rem; font-size:1rem;">Market Prices</h3>
-              <table class="market-table">
-                <thead><tr><th>Asset</th><th>Price</th><th>24h</th></tr></thead>
-                <tbody>
-                  ${state.marketData.map(coin => `
-                    <tr>
-                      <td><div class="coin-symbol"><div class="coin-icon">${coin.symbol[0]}</div>${coin.symbol}</div></td>
-                      <td>$${coin.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
-                      <td class="${coin.change >= 0 ? 'text-success' : 'text-danger'}">${coin.change >= 0 ? '+' : ''}${coin.change}%</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
+          <div id="otpVerifyBlock" style="display:none">
+            <p class="small muted" id="otpSentTo" style="margin-bottom:4px"></p>
+            <div class="otp-row" id="otpRow">
+              <input maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+              <input maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+              <input maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+              <input maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+              <input maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+              <input maxlength="1" inputmode="numeric" pattern="[0-9]"/>
             </div>
-            <div class="card">
-              <h3 style="margin-bottom:1rem; font-size:1rem;">Recent Transactions</h3>
-              <table class="market-table">
-                <thead><tr><th>Type</th><th>Asset</th><th>Amount</th><th>Status</th></tr></thead>
-                <tbody>
-                  ${state.transactions.map(tx => `
-                    <tr>
-                      <td>${tx.type}</td>
-                      <td>${tx.asset}</td>
-                      <td>${tx.amount}</td>
-                      <td><span class="badge ${tx.status === 'Completed' ? 'badge-success' : ''}">${tx.status}</span></td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
+            <div class="banner" id="demoHint" style="display:none"></div>
+            <button class="btn btn-primary btn-block" id="verifyOtpBtn">Verify</button>
+            <p class="small muted" style="margin-top:12px;text-align:center">
+              Didn't receive it? <button id="resendBtn" disabled style="color:var(--brand)">Resend (<span id="resendCd">30</span>s)</button>
+            </p>
           </div>
-        `;
-      }
+        </div>
+      </div>
+    </section>
 
-      function renderTradeView() {
-        mainContent.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
-            <h1 style="font-size:1.8rem; font-weight:700;">Trade</h1>
-            <div class="sim-tag"><i class="fas fa-flask"></i> Simulated Trading</div>
+    <!-- DASHBOARD -->
+    <section class="view" id="view-dashboard">
+      <div class="between" style="margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <h1 style="font-size:26px">Dashboard</h1>
+          <p class="muted small" id="dashWelcome">Welcome back.</p>
+        </div>
+        <span class="tag">Simulated data</span>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="label">Portfolio value</div><div class="value" id="statValue">$25,000.00</div><div class="delta tag-up" id="statDelta">+0.00% today</div></div>
+        <div class="stat"><div class="label">Cash balance</div><div class="value" id="statCash">$10,000.00</div><div class="delta muted">Available</div></div>
+        <div class="stat"><div class="label">Holdings</div><div class="value" id="statHoldings">$15,000.00</div><div class="delta muted">3 positions</div></div>
+        <div class="stat"><div class="label">P&L today</div><div class="value" id="statPnl">$0.00</div><div class="delta muted">Across all trades</div></div>
+      </div>
+      <div class="dash-grid">
+        <div class="card">
+          <div class="between" style="margin-bottom:14px"><h3>Portfolio performance</h3><span class="tag">1D</span></div>
+          <canvas id="portfolioChart" height="140"></canvas>
+        </div>
+        <div class="card">
+          <div class="between" style="margin-bottom:14px"><h3>Watchlist</h3><a href="#" data-nav="markets" class="small" style="color:var(--brand)">See all</a></div>
+          <div id="dashWatchlist"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h3 style="margin-bottom:14px">Recent activity</h3>
+        <table class="table">
+          <thead><tr><th>Time</th><th>Type</th><th>Asset</th><th>Amount</th><th>Price</th></tr></thead>
+          <tbody id="activityTbody"><tr><td colspan="5" class="muted small" style="text-align:center;padding:20px">No activity yet — try placing a demo trade.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MARKETS -->
+    <section class="view" id="view-markets">
+      <div class="between" style="margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <h1 style="font-size:26px">Markets</h1>
+        <div class="row"><input id="marketSearch" placeholder="Search asset…" style="max-width:240px"/></div>
+      </div>
+      <div class="dash-grid">
+        <div class="card">
+          <table class="table">
+            <thead><tr><th>Asset</th><th>Price</th><th>24h</th><th></th></tr></thead>
+            <tbody id="marketsTbody"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="between" style="margin-bottom:14px"><h3 id="chartTitle">BTC/USD</h3><span class="tag" id="chartPrice">—</span></div>
+          <canvas id="marketChart" height="200"></canvas>
+          <div class="row" style="margin-top:12px;flex-wrap:wrap">
+            <button class="btn btn-ghost" id="chartTf" data-tf="1H">1H</button>
+            <button class="btn btn-ghost" id="chartTf" data-tf="1D">1D</button>
+            <button class="btn btn-ghost" id="chartTf" data-tf="1W">1W</button>
           </div>
-          <div class="trade-panel">
-            <div class="pair-selector">
-              <button class="pair-btn active">BTC/USDT</button>
-              <button class="pair-btn">ETH/USDT</button>
-              <button class="pair-btn">SOL/USDT</button>
-              <button class="pair-btn">XRP/USDT</button>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
-              <div>
-                <div class="order-type-tabs">
-                  <div class="order-type-tab active">Buy</div>
-                  <div class="order-type-tab">Sell</div>
-                </div>
-                <div class="form-group">
-                  <label>Price (USDT)</label>
-                  <input type="number" value="64382.20" step="0.01">
-                </div>
-                <div class="form-group">
-                  <label>Amount (BTC)</label>
-                  <input type="number" placeholder="0.00">
-                </div>
-                <button class="btn btn-success" style="width:100%; margin-top:0.5rem;">Buy BTC</button>
-              </div>
-              <div>
-                <h4 style="margin-bottom:1rem;">Open Orders</h4>
-                ${state.openOrders.map(o => `
-                  <div style="display:flex; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid #1f2a3f;">
-                    <span>${o.pair} ${o.side}</span>
-                    <span>${o.amount} @ $${o.price}</span>
-                    <span class="badge">${o.status}</span>
-                  </div>
-                `).join('')}
-                <h4 style="margin-top:1.5rem; margin-bottom:0.5rem;">Order History</h4>
-                ${state.orderHistory.map(o => `
-                  <div style="display:flex; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid #1f2a3f;">
-                    <span>${o.pair} ${o.side}</span>
-                    <span>${o.amount} @ $${o.price}</span>
-                    <span class="badge badge-success">${o.status}</span>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRADE -->
+    <section class="view" id="view-trade">
+      <h1 style="font-size:26px;margin-bottom:20px">Trade</h1>
+      <div class="dash-grid">
+        <div class="card">
+          <div class="between" style="margin-bottom:16px">
+            <h3>Place demo order</h3>
+            <span class="tag" id="tradeSymbol">BTC/USD</span>
           </div>
-        `;
-      }
-
-      function renderWalletView() {
-        const totalUsd = state.balances.usdt + (state.balances.btc * 64382) + (state.balances.eth * 3348) + (state.balances.sol * 142.8);
-        mainContent.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
-            <h1 style="font-size:1.8rem; font-weight:700;">Wallet</h1>
-            <div class="sim-tag"><i class="fas fa-flask"></i> Simulated Funds</div>
+          <div class="method-tabs" id="sideTabs">
+            <button data-side="buy" class="active">Buy</button>
+            <button data-side="sell">Sell</button>
           </div>
-          <div style="display:grid; grid-template-columns:1fr 2fr; gap:1.5rem;">
-            <div class="card">
-              <div class="stat-label">Estimated Total</div>
-              <div class="stat-value">$${totalUsd.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</div>
-              <div style="margin-top:1.5rem; display:flex; flex-direction:column; gap:0.75rem;">
-                <button class="btn btn-primary" onclick="alert('Deposit simulation – no real funds moved.')"><i class="fas fa-arrow-down"></i> Deposit</button>
-                <button class="btn btn-outline" onclick="alert('Withdrawal simulation – no real funds moved.')"><i class="fas fa-arrow-up"></i> Withdraw</button>
-              </div>
-            </div>
-            <div class="card">
-              <h3 style="margin-bottom:1rem;">Your Assets</h3>
-              <div class="wallet-asset-row">
-                <div style="display:flex; align-items:center; gap:0.75rem;"><div class="coin-icon">₮</div><div><strong>USDT</strong><div class="text-muted" style="font-size:0.75rem;">Tether</div></div></div>
-                <div style="text-align:right;"><div>${state.balances.usdt.toLocaleString(undefined, {minimumFractionDigits:2})}</div><div class="text-muted" style="font-size:0.75rem;">$${state.balances.usdt.toLocaleString(undefined, {minimumFractionDigits:2})}</div></div>
-              </div>
-              <div class="wallet-asset-row">
-                <div style="display:flex; align-items:center; gap:0.75rem;"><div class="coin-icon">₿</div><div><strong>BTC</strong><div class="text-muted" style="font-size:0.75rem;">Bitcoin</div></div></div>
-                <div style="text-align:right;"><div>${state.balances.btc}</div><div class="text-muted" style="font-size:0.75rem;">$${(state.balances.btc * 64382).toLocaleString(undefined, {minimumFractionDigits:2})}</div></div>
-              </div>
-              <div class="wallet-asset-row">
-                <div style="display:flex; align-items:center; gap:0.75rem;"><div class="coin-icon">Ξ</div><div><strong>ETH</strong><div class="text-muted" style="font-size:0.75rem;">Ethereum</div></div></div>
-                <div style="text-align:right;"><div>${state.balances.eth}</div><div class="text-muted" style="font-size:0.75rem;">$${(state.balances.eth * 3348).toLocaleString(undefined, {minimumFractionDigits:2})}</div></div>
-              </div>
-              <div class="wallet-asset-row">
-                <div style="display:flex; align-items:center; gap:0.75rem;"><div class="coin-icon">◎</div><div><strong>SOL</strong><div class="text-muted" style="font-size:0.75rem;">Solana</div></div></div>
-                <div style="text-align:right;"><div>${state.balances.sol}</div><div class="text-muted" style="font-size:0.75rem;">$${(state.balances.sol * 142.8).toLocaleString(undefined, {minimumFractionDigits:2})}</div></div>
-              </div>
-            </div>
+          <div class="field"><label>Quantity</label><input id="tradeQty" type="number" min="0.0001" step="0.0001" value="0.1"/></div>
+          <div class="field"><label>Order type</label>
+            <select id="tradeType"><option>Market</option><option>Limit</option></select>
           </div>
-        `;
-      }
-
-      function renderProfileView() {
-        mainContent.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
-            <h1 style="font-size:1.8rem; font-weight:700;">Profile & Security</h1>
+          <div class="card" style="background:var(--bg-2);margin-bottom:16px">
+            <div class="between small muted"><span>Estimated cost</span><span id="tradeCost">$0.00</span></div>
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
-            <div class="card">
-              <h3 style="margin-bottom:1rem;">Personal Information</h3>
-              <div class="form-group"><label>Full Name</label><input type="text" value="${state.currentUser.name}" disabled style="background:#1a2332;"></div>
-              <div class="form-group"><label>Email</label><input type="email" value="${state.currentUser.email}" disabled style="background:#1a2332;"></div>
-              <div class="form-group"><label>Phone</label><input type="tel" value="${state.currentUser.phone}" disabled style="background:#1a2332;"></div>
-              <div style="margin-top:1rem; display:flex; gap:1rem;">
-                <span class="badge badge-success"><i class="fas fa-check-circle"></i> Email Verified</span>
-                <span class="badge badge-success"><i class="fas fa-check-circle"></i> Phone Verified</span>
-              </div>
-            </div>
-            <div class="card">
-              <h3 style="margin-bottom:1rem;">Security Settings</h3>
-              <div style="display:flex; flex-direction:column; gap:1rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span>Two-Factor Authentication</span>
-                  <span class="badge badge-success">Enabled</span>
-                </div>
-                <button class="btn btn-outline" onclick="alert('2FA settings simulation.')">Manage 2FA</button>
-                <button class="btn btn-outline" onclick="alert('Change password simulation.')">Change Password</button>
-                <h4 style="margin-top:1rem;">Login History</h4>
-                ${state.loginHistory.map(l => `
-                  <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #1f2a3f; font-size:0.85rem;">
-                    <span>${l.device}</span><span>${l.date}</span><span class="text-success">${l.status}</span>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
+          <button class="btn btn-primary btn-block" id="placeOrderBtn">Place demo order</button>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:14px">Open positions</h3>
+          <table class="table">
+            <thead><tr><th>Symbol</th><th>Qty</th><th>Avg</th><th>P&L</th></tr></thead>
+            <tbody id="positionsTbody"><tr><td colspan="4" class="muted small" style="text-align:center;padding:20px">No open positions.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="view" id="view-profile">
+      <h1 style="font-size:26px;margin-bottom:20px">Account & security</h1>
+      <div class="dash-grid">
+        <div class="card">
+          <h3 style="margin-bottom:16px">Profile</h3>
+          <form id="profileForm">
+            <div class="field"><label>Full name</label><input id="pName"/></div>
+            <div class="field"><label>Email</label><input id="pEmail" type="email"/></div>
+            <div class="field"><label>Phone</label><input id="pPhone"/></div>
+            <button class="btn btn-primary">Save changes</button>
+          </form>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:16px">Security</h3>
+          <div class="between" style="padding:14px 0;border-bottom:1px solid var(--line)">
+            <div><div style="font-weight:600">Two-step verification</div><div class="small muted">Email or SMS on each login</div></div>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+              <input type="checkbox" id="twoFaToggle" checked style="width:auto"/>
+              <span class="small">Enabled</span>
+            </label>
           </div>
-        `;
-      }
+          <div style="padding-top:14px"><button class="btn btn-ghost btn-block" id="changePwBtn">Change password</button></div>
+          <div style="padding-top:10px"><button class="btn btn-danger btn-block" id="logoutBtn2">Log out</button></div>
+        </div>
+      </div>
+    </section>
 
-      // ========== NAVIGATION & LOGOUT ==========
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-          if (!state.currentUser) return;
-          const view = item.dataset.view;
-          if (view) {
-            state.activeView = view;
-            renderDashboardView();
-          }
-        });
-      });
+  </main>
+</div>
 
-      logoutBtn.addEventListener('click', () => {
-        // Secure logout simulation
-        state.currentUser = null;
-        state.authStep = 'login';
-        state.activeView = 'dashboard';
-        dashboardScreen.classList.add('hidden');
-        authScreen.classList.remove('hidden');
-        renderAuth();
-        if (window.resendInterval) clearInterval(window.resendInterval);
-      });
+<div id="toasts"></div>
 
-      // ========== INIT ==========
-      renderAuth();
-      // Simulate a light/dark toggle? We'll keep dark as default, but you can switch via class.
-      // For demo, we add a small theme toggle in the sidebar? Not needed.
+<script>
+/* =========================================================
+   KESTREL TRADE — FRONT-END PROTOTYPE
+   All data is in-memory and simulated. Nothing leaves the browser.
+   This is a UI/UX reference. Real authentication, 2FA delivery,
+   and persistence require a backend (see notes below).
+   ========================================================= */
 
-      // Expose some functions for inline onclick handlers if needed
-      window.state = state;
-    })();
-  </script>
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+
+/* ---------- Toast ---------- */
+function toast(msg, kind='info', ms=4000){
+  const el = document.createElement('div');
+  el.className = 'toast ' + (kind==='ok'?'ok':kind==='err'?'err':kind==='warn'?'warn':'');
+  el.textContent = msg;
+  $('#toasts').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300)}, ms);
+}
+
+/* ---------- Theme ---------- */
+const themeBtn = $('#themeBtn');
+const savedTheme = localStorage.getItem('kt-theme') || 'dark';
+document.documentElement.dataset.theme = savedTheme;
+themeBtn.onclick = ()=>{
+  const cur = document.documentElement.dataset.theme;
+  const next = cur==='dark'?'light':'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('kt-theme', next);
+};
+
+/* ---------- Nav ---------- */
+const views = $$('.view');
+function show(id){
+  views.forEach(v=>v.classList.toggle('active', v.id === 'view-'+id));
+  $$('#mainnav a').forEach(a=>a.classList.toggle('active', a.dataset.nav === id));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='markets') renderMarkets();
+  if(id==='dashboard') renderDashboard();
+  if(id==='trade') renderTrade();
+  if(id==='profile') renderProfile();
+  if(id==='2fa') renderOtpView();
+}
+document.addEventListener('click', e=>{
+  const t = e.target.closest('[data-nav]');
+  if(!t) return;
+  e.preventDefault();
+  const target = t.dataset.nav;
+  // gate: dashboard/trade/profile require auth
+  if(['dashboard','trade','profile'].includes(target) && !state.user){
+    toast('Please log in first.', 'warn');
+    show('login'); return;
+  }
+  show(target);
+});
+$('#navToggle').onclick = ()=> $('#mainnav').classList.toggle('open');
+
+/* ---------- State ---------- */
+const state = {
+  user: null,
+  pendingUser: null,        // user awaiting 2FA
+  otp: { method:'email', code:null, expires:0, dest:'' },
+  resendAt: 0,
+  portfolio: { cash: 10000, positions: {}, activity: [] },
+  watchlist: ['BTC/USD','ETH/USD','AAPL','TSLA'],
+};
+
+/* ---------- Markets ---------- */
+const MARKETS = {
+  'BTC/USD': { name:'Bitcoin', price: 64521.30, change: 2.14 },
+  'ETH/USD': { name:'Ethereum', price: 3120.88, change: -1.20 },
+  'SOL/USD': { name:'Solana', price: 148.42, change: 4.05 },
+  'AAPL':    { name:'Apple Inc.', price: 226.41, change: 0.68 },
+  'TSLA':    { name:'Tesla', price: 245.11, change: -0.92 },
+  'NVDA':    { name:'NVIDIA', price: 118.44, change: 3.12 },
+  'MSFT':    { name:'Microsoft', price: 429.70, change: 0.31 },
+};
+
+/* ---------- Auth: Register ---------- */
+$('#regForm').onsubmit = (e)=>{
+  e.preventDefault();
+  const f = e.target;
+  const ok = validateField(f,'name', v=>v.trim().length>=2)
+          & validateField(f,'email', v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))
+          & validateField(f,'phone', v=>/^\+\d{8,15}$/.test(v))
+          & validateField(f,'password', v=>/^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(v));
+  if(!ok) return;
+  const data = Object.fromEntries(new FormData(f));
+  // simulate "user created" — store in-memory
+  state.user = { name:data.name, email:data.email, phone:data.phone };
+  toast('Account created (demo). Logging you in…','ok');
+  setTimeout(()=>{
+    state.pendingUser = state.user;
+    state.user = null;
+    state.otp.method = 'email';
+    show('2fa');
+  }, 600);
+};
+
+/* ---------- Auth: Login ---------- */
+$('#loginForm').onsubmit = (e)=>{
+  e.preventDefault();
+  const f = e.target;
+  const ok = validateField(f,'identifier', v=>v.length>=3)
+          & validateField(f,'password', v=>v.length>=1);
+  if(!ok) return;
+  const {identifier,password} = Object.fromEntries(new FormData(f));
+  if(identifier==='demo@kestrel.io' && password==='demo1234'){
+    state.pendingUser = { name:'Demo User', email:'demo@kestrel.io', phone:'+254712345678' };
+    state.otp.method = 'email';
+    state.user = null;
+    show('2fa');
+  } else {
+    toast('Incorrect email/phone or password.','err');
+  }
+};
+
+/* ---------- Password reset ---------- */
+$('#resetForm').onsubmit = (e)=>{
+  e.preventDefault();
+  const f = e.target;
+  if(!validateField(f,'email', v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))) return;
+  toast('If an account exists, a reset link was sent (demo).','ok');
+  show('login');
+};
+
+/* ---------- Validation ---------- */
+function validateField(form, name, predicate){
+  const field = form.querySelector(`[data-f="${name}"]`);
+  const input = field.querySelector('input');
+  const ok = predicate(input.value);
+  field.classList.toggle('invalid', !ok);
+  return ok;
+}
+
+/* ---------- 2FA ---------- */
+let otpMethod = 'email';
+$('#methodTabs').onclick = (e)=>{
+  const b = e.target.closest('[data-method]'); if(!b) return;
+  $$('#methodTabs button').forEach(x=>x.classList.toggle('active', x===b));
+  otpMethod = b.dataset.method;
+  state.otp.method = otpMethod;
+  $('#otpSendBlock').style.display='';
+  $('#otpVerifyBlock').style.display='none';
+  $('#otpDest').textContent = otpMethod==='email'
+    ? 'A 6-digit code will be sent to your registered email.'
+    : 'A 6-digit code will be sent to your registered phone (SMS).';
+};
+
+function renderOtpView(){
+  if(!state.pendingUser){ show('login'); return; }
+  $('#otpSendBlock').style.display='';
+  $('#otpVerifyBlock').style.display='none';
+  $('#otpDest').textContent = otpMethod==='email'
+    ? 'A 6-digit code will be sent to your registered email.'
+    : 'A 6-digit code will be sent to your registered phone (SMS).';
+}
+
+/* Simulate sending OTP. In production this hits a server route that
+   calls Resend / Twilio / Africa's Talking. */
+$('#sendOtpBtn').onclick = async ()=>{
+  const u = state.pendingUser;
+  const dest = state.otp.method==='email' ? u.email : u.phone;
+  $('#sendOtpBtn').disabled = true;
+  $('#sendOtpBtn').textContent = 'Sending…';
+  await new Promise(r=>setTimeout(r,700));
+  // simulate a code
+  const code = String(Math.floor(100000 + Math.random()*900000));
+  state.otp = { method: state.otp.method, code, expires: Date.now()+5*60*1000, dest };
+  $('#otpSendBlock').style.display='none';
+  $('#otpVerifyBlock').style.display='';
+  $('#otpSentTo').textContent = state.otp.method==='email'
+    ? `Code sent to ${maskEmail(dest)}`
+    : `Code sent via SMS to ${maskPhone(dest)}`;
+  // Demo-only hint: display the generated code so you can test.
+  // ⚠️ In a real app NEVER show the code — it must arrive via email/SMS.
+  const hint = $('#demoHint');
+  hint.style.display='flex';
+  hint.innerHTML = `🧪 <b>Demo mode</b> — your code is <b style="letter-spacing:2px">${code}</b>. In production this never appears here; it is delivered by your provider.`;
+  // SMS auto-verify: attempt to read SMS via WebOTP-like flow is not possible
+  // in a plain web app without a real SMS provider. Here we simply log.
+  if(state.otp.method==='sms'){
+    toast('SMS dispatched (simulated). Code shown below for demo testing.','info');
+  } else {
+    toast('Email dispatched (simulated). Code shown below for demo testing.','info');
+  }
+  // Focus first OTP input
+  $('#otpRow input').focus();
+  // Reset resend cooldown
+  startResendCooldown(30);
+  $('#sendOtpBtn').disabled = false;
+  $('#sendOtpBtn').textContent = 'Send code';
+};
+
+function maskEmail(e){ const [u,d]=e.split('@'); return u.slice(0,2)+'***@'+d; }
+function maskPhone(p){ return p.slice(0,3)+' *** '+p.slice(-3); }
+
+/* OTP input focus management */
+$('#otpRow').addEventListener('input', (e)=>{
+  const inputs = $$('#otpRow input');
+  const i = inputs.indexOf(e.target);
+  if(e.target.value && i < inputs.length-1) inputs[i+1].focus();
+  // auto-verify when full and method is sms (per user's requirement)
+  if(state.otp.method==='sms' && inputs.every(x=>x.value)){
+    verifyOtp();
+  }
+});
+$('#otpRow').addEventListener('keydown', (e)=>{
+  const inputs = $$('#otpRow input');
+  const i = inputs.indexOf(e.target);
+  if(e.key==='Backspace' && !e.target.value && i>0) inputs[i-1].focus();
+});
+
+$('#verifyOtpBtn').onclick = verifyOtp;
+function verifyOtp(){
+  const inputs = $$('#otpRow input');
+  const val = inputs.map(x=>x.value).join('');
+  if(val.length !== 6){ toast('Enter all 6 digits.','warn'); return; }
+  if(Date.now() > state.otp.expires){
+    toast('Code expired. Request a new one.','err');
+    return;
+  }
+  if(val !== state.otp.code){
+    toast('Incorrect code. Please try again.','err');
+    return;
+  }
+  // success
+  state.user = state.pendingUser;
+  state.pendingUser = null;
+  state.otp = { method:'email', code:null, expires:0, dest:'' };
+  toast('Verification successful. Welcome!','ok');
+  updateAuthUI();
+  show('dashboard');
+}
+
+function startResendCooldown(sec){
+  const btn = $('#resendBtn');
+  const cd = $('#resendCd');
+  btn.disabled = true;
+  let left = sec;
+  cd.textContent = left;
+  const t = setInterval(()=>{
+    left--;
+    cd.textContent = left;
+    if(left<=0){ clearInterval(t); btn.disabled=false; btn.innerHTML='Resend'; }
+  },1000);
+}
+$('#resendBtn').onclick = ()=>{
+  const btn = $('#resendBtn');
+  btn.innerHTML = 'Resend (<span id="resendCd">30</span>s)';
+  // wipe inputs
+  $$('#otpRow input').forEach(i=>i.value='');
+  // re-generate code
+  const code = String(Math.floor(100000 + Math.random()*900000));
+  state.otp.code = code;
+  state.otp.expires = Date.now()+5*60*1000;
+  $('#demoHint').innerHTML = `🧪 <b>Demo mode</b> — new code is <b style="letter-spacing:2px">${code}</b>. Previous code is now invalid.`;
+  toast('New code sent (simulated). Previous code invalidated.','ok');
+  $('#otpRow input').focus();
+  startResendCooldown(30);
+};
+
+/* ---------- Logout ---------- */
+function logout(){
+  state.user = null;
+  updateAuthUI();
+  toast('Logged out.','ok');
+  show('landing');
+}
+$('#logoutBtn').onclick = logout;
+$('#logoutBtn2').onclick = logout;
+
+/* ---------- Auth UI update ---------- */
+function updateAuthUI(){
+  const authed = !!state.user;
+  $('#loginBtn').style.display = authed?'none':'';
+  $('#regBtn').style.display   = authed?'none':'';
+  $('#logoutBtn').style.display= authed?'':'none';
+}
+
+/* ---------- Dashboard ---------- */
+let portfolioChart, marketChart;
+function renderDashboard(){
+  if(!state.user) return;
+  $('#dashWelcome').textContent = `Welcome, ${state.user.name.split(' ')[0]}.`;
+  const cash = state.portfolio.cash;
+  const positions = Object.entries(state.portfolio.positions);
+  const holdings = positions.reduce((s,[sym,p])=>s + p.qty*MARKETS[sym].price, 0);
+  const total = cash + holdings;
+  $('#statValue').textContent = '$'+total.toFixed(2);
+  $('#statCash').textContent  = '$'+cash.toFixed(2);
+  $('#statHoldings').textContent = '$'+holdings.toFixed(2);
+  const pnl = positions.reduce((s,[sym,p])=>s + (MARKETS[sym].price - p.avg)*p.qty, 0);
+  $('#statPnl').textContent = (pnl>=0?'+':'')+'$'+pnl.toFixed(2);
+  $('#statPnl').className = 'value ' + (pnl>=0?'tag-up':'tag-down');
+
+  // watchlist
+  const wl = $('#dashWatchlist'); wl.innerHTML='';
+  state.watchlist.forEach(sym=>{
+    const m = MARKETS[sym]; const up = m.change>=0;
+    const row = document.createElement('div');
+    row.className='market-row';
+    row.innerHTML = `<div><div class="sym">${sym.split('/')[0]}<small>${m.name}</small></div></div>
+      <div style="text-align:right"><div>$${m.price.toFixed(2)}</div><div class="small ${up?'tag-up':'tag-down'}">${up?'+':''}${m.change.toFixed(2)}%</div></div>`;
+    wl.appendChild(row);
+  });
+
+  // activity
+  const tb = $('#activityTbody'); tb.innerHTML='';
+  if(!state.portfolio.activity.length){
+    tb.innerHTML = '<tr><td colspan="5" class="muted small" style="text-align:center;padding:20px">No activity yet — try placing a demo trade.</td></tr>';
+  } else {
+    state.portfolio.activity.slice(-6).reverse().forEach(a=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="small muted">${a.time}</td><td><span class="tag ${a.side==='buy'?'tag-up':'tag-down'}">${a.side.toUpperCase()}</span></td><td>${a.sym}</td><td>${a.qty}</td><td>$${a.price.toFixed(2)}</td>`;
+      tb.appendChild(tr);
+    });
+  }
+
+  // chart
+  drawPortfolioChart();
+}
+
+function drawPortfolioChart(){
+  const ctx = $('#portfolioChart');
+  if(!ctx) return;
+  const points = Array.from({length:24},(_,i)=>{
+    const base = 25000;
+    return base + Math.sin(i/3)*300 + (Math.random()-.5)*250 + i*8;
+  });
+  if(portfolioChart) portfolioChart.destroy();
+  portfolioChart = new Chart(ctx, {
+    type:'line',
+    data:{ labels: points.map((_,i)=>`${i}:00`), datasets:[{
+      data: points,
+      borderColor: getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || '#0ea5e9',
+      backgroundColor: 'rgba(14,165,233,.12)',
+      tension:.35, fill:true, pointRadius:0, borderWidth:2
+    }]},
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{display:false},
+        y:{grid:{color:'rgba(148,163,184,.15)'},ticks:{color:'#8ea3bd',font:{size:10}}}
+      },
+      responsive:true, maintainAspectRatio:false
+    }
+  });
+}
+
+/* ---------- Markets ---------- */
+let currentChartSymbol = 'BTC/USD';
+function renderMarkets(filter=''){
+  const tb = $('#marketsTbody'); tb.innerHTML='';
+  Object.entries(MARKETS).filter(([s,m])=>s.toLowerCase().includes(filter.toLowerCase())||m.name.toLowerCase().includes(filter.toLowerCase()))
+    .forEach(([sym,m])=>{
+      const up = m.change>=0;
+      const tr = document.createElement('tr');
+      tr.style.cursor='pointer';
+      tr.innerHTML = `<td><div class="sym">${sym.split('/')[0]}<small>${m.name}</small></div></td>
+        <td>$${m.price.toFixed(2)}</td>
+        <td class="${up?'tag-up':'tag-down'}">${up?'+':''}${m.change.toFixed(2)}%</td>
+        <td><button class="btn btn-ghost small">Watch</button></td>`;
+      tr.onclick = ()=>{ currentChartSymbol = sym; renderMarketChart(sym); };
+      tr.querySelector('button').onclick = (e)=>{ e.stopPropagation(); toggleWatch(sym); };
+      tb.appendChild(tr);
+    });
+  renderMarketChart(currentChartSymbol);
+}
+function toggleWatch(sym){
+  if(state.watchlist.includes(sym)) state.watchlist = state.watchlist.filter(x=>x!==sym);
+  else state.watchlist.push(sym);
+  toast(state.watchlist.includes(sym)?`Added ${sym} to watchlist.`:`Removed ${sym} from watchlist.`,'ok');
+}
+$('#marketSearch').oninput = (e)=> renderMarkets(e.target.value);
+
+function renderMarketChart(sym){
+  const m = MARKETS[sym];
+  $('#chartTitle').textContent = sym;
+  $('#chartPrice').textContent = '$'+m.price.toFixed(2);
+  const points = Array.from({length:40},()=> m.price*(1+(Math.random()-.5)*0.02));
+  if(marketChart) marketChart.destroy();
+  marketChart = new Chart($('#marketChart'),{
+    type:'line',
+    data:{labels:points.map((_,i)=>i), datasets:[{
+      data:points, borderColor: m.change>=0 ? '#10b981':'#ef4444',
+      backgroundColor: m.change>=0 ? 'rgba(16,185,129,.1)':'rgba(239,68,68,.1)',
+      tension:.3, fill:true, pointRadius:0, borderWidth:2
+    }]},
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{x:{display:false},y:{grid:{color:'rgba(148,163,184,.15)'},ticks:{color:'#8ea3bd',font:{size:10}}}},
+      responsive:true, maintainAspectRatio:false
+    }
+  });
+}
+
+/* ---------- Trade ---------- */
+let tradeSide = 'buy';
+$('#sideTabs').onclick = (e)=>{
+  const b = e.target.closest('[data-side]'); if(!b) return;
+  $$('#sideTabs button').forEach(x=>x.classList.toggle('active', x===b));
+  tradeSide = b.dataset.side;
+};
+$('#tradeQty').oninput = updateTradeCost;
+function updateTradeCost(){
+  const qty = parseFloat($('#tradeQty').value)||0;
+  const p = MARKETS[currentChartSymbol].price;
+  $('#tradeCost').textContent = '$'+(qty*p).toFixed(2);
+}
+$('#placeOrderBtn').onclick = ()=>{
+  if(!state.user){ toast('Log in to trade.','warn'); return; }
+  const qty = parseFloat($('#tradeQty').value)||0;
+  if(qty<=0){ toast('Enter a quantity.','warn'); return; }
+  const p = MARKETS[currentChartSymbol].price;
+  const cost = qty*p;
+  if(tradeSide==='buy'){
+    if(cost > state.portfolio.cash){ toast('Insufficient demo balance.','err'); return; }
+    state.portfolio.cash -= cost;
+    const pos = state.portfolio.positions[currentChartSymbol] || { qty:0, avg:0 };
+    const newQty = pos.qty + qty;
+    pos.avg = (pos.avg*pos.qty + p*qty)/newQty;
+    pos.qty = newQty;
+    state.portfolio.positions[currentChartSymbol] = pos;
+  } else {
+    const pos = state.portfolio.positions[currentChartSymbol];
+    if(!pos || pos.qty < qty){ toast('Not enough position to sell.','err'); return; }
+    pos.qty -= qty;
+    state.portfolio.cash += cost;
+    if(pos.qty < 0.0000001) delete state.portfolio.positions[currentChartSymbol];
+  }
+  const now = new Date();
+  state.portfolio.activity.push({
+    time: now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),
+    side: tradeSide, sym: currentChartSymbol, qty, price: p
+  });
+  toast(`${tradeSide==='buy'?'Bought':'Sold'} ${qty} ${currentChartSymbol} (demo).`,'ok');
+  renderTrade();
+  renderDashboard();
+};
+
+function renderTrade(){
+  $('#tradeSymbol').textContent = currentChartSymbol;
+  updateTradeCost();
+  const tb = $('#positionsTbody'); tb.innerHTML='';
+  const ps = Object.entries(state.portfolio.positions);
+  if(!ps.length){
+    tb.innerHTML = '<tr><td colspan="4" class="muted small" style="text-align:center;padding:20px">No open positions.</td></tr>';
+    return;
+  }
+  ps.forEach(([sym,pos])=>{
+    const cur = MARKETS[sym].price;
+    const pnl = (cur - pos.avg)*pos.qty;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="sym">${sym.split('/')[0]}</td><td>${pos.qty.toFixed(4)}</td><td>$${pos.avg.toFixed(2)}</td>
+      <td class="${pnl>=0?'tag-up':'tag-down'}">${pnl>=0?'+':''}$${pnl.toFixed(2)}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+/* ---------- Profile ---------- */
+function renderProfile(){
+  if(!state.user) return;
+  $('#pName').value = state.user.name;
+  $('#pEmail').value = state.user.email;
+  $('#pPhone').value = state.user.phone;
+}
+$('#profileForm').onsubmit = (e)=>{
+  e.preventDefault();
+  state.user.name = $('#pName').value;
+  state.user.email = $('#pEmail').value;
+  state.user.phone = $('#pPhone').value;
+  toast('Profile updated (demo).','ok');
+};
+$('#twoFaToggle').onchange = (e)=> toast(e.target.checked?'2FA enabled.':'2FA disabled.','ok');
+$('#changePwBtn').onclick = ()=> toast('Change password requires current password + 2FA (backend).','info');
+
+/* ---------- Init ---------- */
+updateAuthUI();
+renderMarkets();
+drawPortfolioChart();
+</script>
 </body>
 </html>
