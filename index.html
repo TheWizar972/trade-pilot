@@ -1,1265 +1,574 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>NEXA Exchange | Professional Crypto Trading</title>
-  <!-- Google Fonts & Font Awesome -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #0a0e17;
-      color: #e5e9f0;
-      line-height: 1.5;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    /* Light theme variables */
-    .light-theme {
-      background-color: #f5f7fb;
-      color: #1a1f2e;
-    }
-
-    .light-theme .card,
-    .light-theme .auth-card,
-    .light-theme .sidebar,
-    .light-theme .trade-panel,
-    .light-theme .wallet-panel {
-      background: #ffffff;
-      border-color: #dce2ec;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
-    }
-
-    .light-theme .stat-value,
-    .light-theme .market-price,
-    .light-theme .coin-symbol {
-      color: #0b0f1a;
-    }
-
-    .light-theme .nav-item:hover,
-    .light-theme .nav-item.active {
-      background: #eef2f9;
-      color: #1e3a8a;
-    }
-
-    .light-theme .btn-outline {
-      border-color: #cbd5e1;
-      color: #1e293b;
-    }
-
-    .light-theme .btn-outline:hover {
-      background: #f1f5f9;
-    }
-
-    .light-theme .table th {
-      color: #475569;
-    }
-
-    .light-theme .table td {
-      border-bottom-color: #e2e8f0;
-    }
-
-    /* ===== LAYOUT & UTILS ===== */
-    .app {
-      display: flex;
-      min-height: 100vh;
-      flex-direction: column;
-    }
-
-    .dashboard-layout {
-      display: flex;
-      flex: 1;
-    }
-
-    .sidebar {
-      width: 260px;
-      background: #111827;
-      border-right: 1px solid #1f2a3f;
-      padding: 1.5rem 1rem;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.2s;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 1.5rem 2rem;
-      overflow-y: auto;
-      background: #0a0e17;
-    }
-
-    .light-theme .main-content {
-      background: #f5f7fb;
-    }
-
-    /* ===== TYPOGRAPHY & COLORS ===== */
-    .text-accent {
-      color: #3b82f6;
-    }
-
-    .text-success {
-      color: #10b981;
-    }
-
-    .text-danger {
-      color: #ef4444;
-    }
-
-    .text-muted {
-      color: #94a3b8;
-    }
-
-    .light-theme .text-muted {
-      color: #64748b;
-    }
-
-    .badge {
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 0.25rem 0.6rem;
-      border-radius: 30px;
-      background: #1e293b;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-    }
-
-    .badge-success {
-      background: #064e3b;
-      color: #a7f3d0;
-    }
-
-    /* ===== CARDS ===== */
-    .card {
-      background: #111827;
-      border: 1px solid #1f2a3f;
-      border-radius: 1rem;
-      padding: 1.25rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transition: transform 0.15s, border-color 0.2s;
-    }
-
-    .card:hover {
-      border-color: #2d3b52;
-    }
-
-    .stat-value {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -0.02em;
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* ===== BUTTONS ===== */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      padding: 0.6rem 1.2rem;
-      border-radius: 0.75rem;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border: none;
-      transition: all 0.15s;
-      background: #1e293b;
-      color: #e5e9f0;
-    }
-
-    .btn-primary {
-      background: #2563eb;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #1d4ed8;
-    }
-
-    .btn-success {
-      background: #10b981;
-      color: #0a0e17;
-    }
-
-    .btn-success:hover {
-      background: #059669;
-    }
-
-    .btn-danger {
-      background: #ef4444;
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: #dc2626;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 1px solid #2d3b52;
-      color: #e5e9f0;
-    }
-
-    .btn-outline:hover {
-      background: #1f2a3f;
-    }
-
-    .btn-sm {
-      padding: 0.35rem 0.9rem;
-      font-size: 0.8rem;
-      border-radius: 0.5rem;
-    }
-
-    /* ===== AUTH MODAL / SCREENS ===== */
-    .auth-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 1rem;
-    }
-
-    .auth-card {
-      background: #111827;
-      border: 1px solid #1f2a3f;
-      border-radius: 2rem;
-      max-width: 440px;
-      width: 100%;
-      padding: 2rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-    }
-
-    .auth-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .auth-header h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-
-    .auth-header p {
-      color: #94a3b8;
-      font-size: 0.9rem;
-      margin-top: 0.4rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #94a3b8;
-      margin-bottom: 0.4rem;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      background: #0a0e17;
-      border: 1px solid #1f2a3f;
-      border-radius: 0.75rem;
-      color: #e5e9f0;
-      font-size: 0.95rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    }
-
-    .code-input {
-      letter-spacing: 0.5rem;
-      font-weight: 600;
-      text-align: center;
-      font-size: 1.4rem !important;
-    }
-
-    .auth-footer {
-      text-align: center;
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
-      color: #94a3b8;
-    }
-
-    .auth-footer a {
-      color: #3b82f6;
-      text-decoration: none;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .timer-text {
-      font-size: 0.8rem;
-      color: #94a3b8;
-      text-align: center;
-      margin-top: 0.5rem;
-    }
-
-    .error-msg {
-      color: #f87171;
-      font-size: 0.8rem;
-      margin-top: 0.4rem;
-      display: none;
-    }
-
-    /* ===== NAVIGATION ===== */
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 2.5rem;
-      padding-left: 0.5rem;
-    }
-
-    .logo-icon {
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.2rem;
-      color: white;
-    }
-
-    .logo-text {
-      font-weight: 700;
-      font-size: 1.2rem;
-      letter-spacing: -0.02em;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-      padding: 0.75rem 1rem;
-      border-radius: 0.75rem;
-      color: #94a3b8;
-      font-weight: 500;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.15s;
-      margin-bottom: 0.25rem;
-    }
-
-    .nav-item i {
-      width: 1.2rem;
-      text-align: center;
-    }
-
-    .nav-item:hover,
-    .nav-item.active {
-      background: #1e293b;
-      color: #ffffff;
-    }
-
-    .nav-item.active i {
-      color: #3b82f6;
-    }
-
-    .spacer {
-      flex: 1;
-    }
-
-    .user-profile-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 0.5rem;
-      border-top: 1px solid #1f2a3f;
-      margin-top: 1rem;
-    }
-
-    .avatar {
-      width: 36px;
-      height: 36px;
-      background: #1e293b;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: #3b82f6;
-    }
-
-    /* ===== MARKET TABLE ===== */
-    .market-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    .market-table th {
-      text-align: left;
-      padding: 0.75rem 0.5rem;
-      color: #94a3b8;
-      font-weight: 500;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      border-bottom: 1px solid #1f2a3f;
-    }
-
-    .market-table td {
-      padding: 0.9rem 0.5rem;
-      border-bottom: 1px solid #1a2332;
-    }
-
-    .coin-symbol {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 600;
-    }
-
-    .coin-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #1e293b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    /* ===== TRADING INTERFACE ===== */
-    .trade-panel {
-      background: #111827;
-      border-radius: 1rem;
-      padding: 1.5rem;
-      border: 1px solid #1f2a3f;
-    }
-
-    .pair-selector {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-    }
-
-    .pair-btn {
-      padding: 0.5rem 1rem;
-      border-radius: 2rem;
-      background: #0a0e17;
-      border: 1px solid #1f2a3f;
-      color: #94a3b8;
-      font-weight: 500;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .pair-btn.active {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: white;
-    }
-
-    .order-type-tabs {
-      display: flex;
-      gap: 1rem;
-      border-bottom: 1px solid #1f2a3f;
-      margin-bottom: 1.5rem;
-    }
-
-    .order-type-tab {
-      padding: 0.5rem 0;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #94a3b8;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.15s;
-    }
-
-    .order-type-tab.active {
-      color: #3b82f6;
-      border-bottom-color: #3b82f6;
-    }
-
-    /* ===== WALLET ===== */
-    .wallet-asset-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.9rem 0;
-      border-bottom: 1px solid #1f2a3f;
-    }
-
-    .wallet-asset-row:last-child {
-      border-bottom: none;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 1024px) {
-      .sidebar {
-        width: 220px;
-        padding: 1rem 0.75rem;
-      }
-      .main-content {
-        padding: 1.25rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .dashboard-layout {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        padding: 0.75rem 1rem;
-        border-right: none;
-        border-bottom: 1px solid #1f2a3f;
-      }
-      .logo-area {
-        margin-bottom: 0;
-        margin-right: 1rem;
-      }
-      .nav-item {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.8rem;
-      }
-      .spacer {
-        display: none;
-      }
-      .user-profile-badge {
-        border-top: none;
-        margin-top: 0;
-        margin-left: auto;
-      }
-      .auth-card {
-        padding: 1.5rem;
-        border-radius: 1.5rem;
-      }
-      .stat-value {
-        font-size: 1.4rem;
-      }
-    }
-
-    /* Hidden utility */
-    .hidden {
-      display: none !important;
-    }
-
-    .visible {
-      display: block !important;
-    }
-
-    /* Loading spinner */
-    .spinner {
-      width: 1.2rem;
-      height: 1.2rem;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      display: inline-block;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Simulated tag */
-    .sim-tag {
-      background: #1e293b;
-      color: #94a3b8;
-      font-size: 0.65rem;
-      font-weight: 600;
-      padding: 0.2rem 0.6rem;
-      border-radius: 30px;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      border: 1px solid #2d3b52;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduNotes — Buy Notes & Past Papers</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  .card-hover { transition: transform .2s, box-shadow .2s; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,.08); }
+  .whatsapp-float {
+    position: fixed; bottom: 20px; right: 20px; z-index: 50;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #25D366; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,.25); transition: transform .2s;
+  }
+  .whatsapp-float:hover { transform: scale(1.1); }
+  .hidden-page { display: none !important; }
+  .spinner { border: 3px solid #eee; border-top-color: #16a34a; border-radius: 50%; width: 28px; height: 28px; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
 </head>
-<body>
-  <div class="app" id="app">
-    <!-- AUTH SCREEN (default visible) -->
-    <div id="authScreen" class="auth-overlay">
-      <div class="auth-card fade-in" id="authCard">
-        <!-- Dynamic content -->
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+<!-- ============ NAVBAR ============ -->
+<nav class="bg-white shadow-sm sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="#" onclick="showPage('home')" class="text-xl font-bold text-emerald-700">📚 EduNotes</a>
+    <div class="hidden md:flex gap-6 text-sm font-medium">
+      <a href="#" onclick="showPage('home')" class="hover:text-emerald-600">Home</a>
+      <a href="#" onclick="showPage('notes')" class="hover:text-emerald-600">All Notes</a>
+      <a href="#" onclick="showPage('papers')" class="hover:text-emerald-600">Past Papers</a>
+      <a href="#" onclick="showPage('contact')" class="hover:text-emerald-600">Contact</a>
+      <a href="#" onclick="showPage('admin')" class="text-slate-400 hover:text-slate-600 text-xs">Admin</a>
+    </div>
+    <button onclick="toggleMobileMenu()" class="md:hidden text-2xl">☰</button>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden border-t bg-white">
+    <div class="px-4 py-3 flex flex-col gap-3 text-sm">
+      <a href="#" onclick="showPage('home');toggleMobileMenu()">Home</a>
+      <a href="#" onclick="showPage('notes');toggleMobileMenu()">All Notes</a>
+      <a href="#" onclick="showPage('papers');toggleMobileMenu()">Past Papers</a>
+      <a href="#" onclick="showPage('contact');toggleMobileMenu()">Contact</a>
+      <a href="#" onclick="showPage('admin');toggleMobileMenu()">Admin</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HOME ============ -->
+<main id="page-home" class="flex-1">
+  <section class="bg-gradient-to-br from-emerald-600 to-teal-700 text-white">
+    <div class="max-w-7xl mx-auto px-4 py-16 md:py-24 text-center">
+      <h1 class="text-3xl md:text-5xl font-bold mb-4">Access Quality Academic Notes Instantly</h1>
+      <p class="text-lg md:text-xl mb-8 text-emerald-50 max-w-2xl mx-auto">
+        Buy notes, revision materials, and past papers for just <strong>KSh 100</strong>. Pay via M-Pesa and download instantly.
+      </p>
+      <div class="max-w-xl mx-auto flex gap-2">
+        <input id="homeSearch" type="text" placeholder="Search notes, past papers, course codes..."
+          class="flex-1 px-4 py-3 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+        <button onclick="searchFromHome()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-semibold px-6 py-3 rounded-lg">Search</button>
       </div>
     </div>
+  </section>
 
-    <!-- DASHBOARD (initially hidden) -->
-    <div id="dashboardScreen" class="dashboard-layout hidden">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="logo-area">
-          <div class="logo-icon">N</div>
-          <span class="logo-text">NEXA</span>
-        </div>
-        <div class="nav-item active" data-view="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</div>
-        <div class="nav-item" data-view="trade"><i class="fas fa-chart-line"></i> Trade</div>
-        <div class="nav-item" data-view="wallet"><i class="fas fa-wallet"></i> Wallet</div>
-        <div class="nav-item" data-view="profile"><i class="fas fa-user-shield"></i> Profile</div>
-        <div class="spacer"></div>
-        <div class="user-profile-badge">
-          <div class="avatar" id="userAvatar">JD</div>
-          <div style="flex:1; font-size:0.85rem;">
-            <div id="sidebarUserName" style="font-weight:600;">John Doe</div>
-            <div class="text-muted" style="font-size:0.7rem;">Verified</div>
-          </div>
-          <button class="btn btn-sm btn-outline" id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
-        </div>
-      </aside>
+  <section class="max-w-7xl mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold mb-6">Browse by Category</h2>
+    <div id="homeCategories" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3"></div>
+  </section>
 
-      <!-- Main content area -->
-      <main class="main-content" id="mainContent">
-        <!-- Views injected by JS -->
-      </main>
+  <section class="max-w-7xl mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold mb-6">Latest Documents</h2>
+    <div id="homeDocs" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+  </section>
+</main>
+
+<!-- ============ NOTES / PAPERS ============ -->
+<main id="page-notes" class="hidden-page flex-1 max-w-7xl mx-auto w-full px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6" id="notesTitle">All Notes</h1>
+  <div class="flex flex-col md:flex-row gap-3 mb-6">
+    <input id="searchInput" type="text" placeholder="Search by title or course code..."
+      class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+    <select id="categoryFilter" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+      <option value="">All Categories</option>
+    </select>
+  </div>
+  <div id="docsList" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+</main>
+
+<!-- ============ DOCUMENT DETAIL ============ -->
+<main id="page-document" class="hidden-page flex-1 max-w-3xl mx-auto w-full px-4 py-8">
+  <button onclick="history.back()" class="text-emerald-700 text-sm mb-4">← Back</button>
+  <div id="docDetail"></div>
+</main>
+
+<!-- ============ PAYMENT ============ -->
+<main id="page-payment" class="hidden-page flex-1 max-w-lg mx-auto w-full px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Complete Payment</h1>
+  <div id="payDocInfo" class="bg-white p-4 rounded-xl shadow-sm mb-6"></div>
+  <form onsubmit="initiatePayment(event)" class="bg-white p-6 rounded-xl shadow-sm space-y-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">M-Pesa Phone Number</label>
+      <input id="payPhone" type="tel" placeholder="07XXXXXXXX" required
+        class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+      <p class="text-xs text-slate-500 mt-1">A prompt will appear on your phone. Enter your M-Pesa PIN.</p>
+    </div>
+    <button id="payBtn" type="submit"
+      class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg">
+      Pay via M-Pesa
+    </button>
+  </form>
+  <div id="payStatus" class="mt-6 hidden text-center"></div>
+</main>
+
+<!-- ============ SUCCESS / FAILED ============ -->
+<main id="page-success" class="hidden-page flex-1 max-w-lg mx-auto w-full px-4 py-12 text-center">
+  <div class="text-6xl mb-4">✅</div>
+  <h1 class="text-2xl font-bold text-emerald-700 mb-2">Payment Successful!</h1>
+  <div id="successInfo" class="bg-white p-6 rounded-xl shadow-sm my-6 text-left text-sm space-y-2"></div>
+  <a id="downloadBtn" href="#" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-lg">
+    ⬇ Download Document
+  </a>
+  <p class="text-xs text-slate-500 mt-3">Link expires in 15 minutes and works once.</p>
+</main>
+
+<main id="page-failed" class="hidden-page flex-1 max-w-lg mx-auto w-full px-4 py-12 text-center">
+  <div class="text-6xl mb-4">❌</div>
+  <h1 class="text-2xl font-bold text-red-600 mb-2">Payment Failed</h1>
+  <p id="failReason" class="text-slate-600 mb-6"></p>
+  <button onclick="showPage('notes')" class="bg-emerald-600 text-white px-6 py-3 rounded-lg">Try Again</button>
+</main>
+
+<!-- ============ CONTACT ============ -->
+<main id="page-contact" class="hidden-page flex-1 max-w-2xl mx-auto w-full px-4 py-12">
+  <h1 class="text-3xl font-bold mb-6">Contact Us</h1>
+  <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
+    <p class="mb-4 text-slate-600">Have a question about our notes or need help with a purchase? Reach us on WhatsApp.</p>
+    <a href="https://wa.me/254751841512?text=Hello%2C%20I%20visited%20your%20educational%20notes%20website%20and%20I%20would%20like%20to%20make%20an%20enquiry%20about%20your%20notes%20and%20past%20papers."
+      target="_blank"
+      class="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5b] text-white font-semibold px-6 py-3 rounded-lg">
+      💬 Chat on WhatsApp
+    </a>
+  </div>
+  <form onsubmit="sendEnquiry(event)" class="bg-white p-6 rounded-xl shadow-sm space-y-3">
+    <h2 class="font-semibold mb-2">Or send a message</h2>
+    <input id="enqName" placeholder="Your name" class="w-full px-4 py-2 border rounded-lg" />
+    <input id="enqPhone" placeholder="Your phone" class="w-full px-4 py-2 border rounded-lg" />
+    <textarea id="enqMsg" placeholder="Your message" required rows="4" class="w-full px-4 py-2 border rounded-lg"></textarea>
+    <button class="bg-emerald-600 text-white px-6 py-2 rounded-lg">Send</button>
+    <p id="enqStatus" class="text-sm text-emerald-700"></p>
+  </form>
+</main>
+
+<!-- ============ ADMIN LOGIN ============ -->
+<main id="page-admin" class="hidden-page flex-1 max-w-md mx-auto w-full px-4 py-12">
+  <h1 class="text-2xl font-bold mb-6">Admin Login</h1>
+  <form onsubmit="adminLogin(event)" class="bg-white p-6 rounded-xl shadow-sm space-y-3">
+    <input id="adminUser" placeholder="Username" required class="w-full px-4 py-2 border rounded-lg" />
+    <input id="adminPass" type="password" placeholder="Password" required class="w-full px-4 py-2 border rounded-lg" />
+    <button class="w-full bg-slate-800 text-white py-2 rounded-lg font-semibold">Login</button>
+    <p id="loginError" class="text-sm text-red-600"></p>
+  </form>
+</main>
+
+<!-- ============ ADMIN DASHBOARD ============ -->
+<main id="page-adminDash" class="hidden-page flex-1 max-w-7xl mx-auto w-full px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+    <button onclick="adminLogout()" class="text-sm bg-slate-200 px-4 py-2 rounded-lg">Logout</button>
+  </div>
+
+  <div id="statsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"></div>
+
+  <div class="grid lg:grid-cols-2 gap-6">
+    <div class="bg-white p-6 rounded-xl shadow-sm">
+      <h2 class="font-bold mb-4">Upload New Document</h2>
+      <form onsubmit="uploadDoc(event)" class="space-y-3">
+        <input id="upTitle" placeholder="Title" required class="w-full px-3 py-2 border rounded-lg" />
+        <textarea id="upDesc" placeholder="Description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea>
+        <select id="upCat" required class="w-full px-3 py-2 border rounded-lg"></select>
+        <input id="upPrice" type="number" value="100" min="1" class="w-full px-3 py-2 border rounded-lg" />
+        <input id="upFile" type="file" accept=".pdf,.doc,.docx" required class="w-full text-sm" />
+        <button class="bg-emerald-600 text-white px-6 py-2 rounded-lg font-semibold">Upload</button>
+        <p id="upStatus" class="text-sm"></p>
+      </form>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm">
+      <h2 class="font-bold mb-4">Recent Transactions</h2>
+      <div id="adminTx" class="text-sm space-y-2 max-h-96 overflow-y-auto"></div>
     </div>
   </div>
 
-  <script>
-    (function() {
-      // ========== SIMULATED STATE ==========
-      const state = {
-        currentUser: null,
-        authStep: 'login', // login | register | forgot | verify2fa | resetPassword
-        pendingEmail: '',
-        pendingPhone: '',
-        pendingFullName: '',
-        verificationCode: null,
-        verificationMethod: 'email',
-        codeExpiry: null,
-        resendTimer: 30,
-        attempts: 0,
-        locked: false,
-        activeView: 'dashboard',
-        theme: 'dark',
-        balances: {
-          usdt: 25420.80,
-          btc: 0.428,
-          eth: 3.15,
-          sol: 12.5,
-        },
-        transactions: [
-          { type: 'Deposit', asset: 'USDT', amount: 5000, status: 'Completed', date: '2025-03-28' },
-          { type: 'Trade', asset: 'BTC', amount: 0.05, status: 'Completed', date: '2025-03-27' },
-          { type: 'Withdraw', asset: 'ETH', amount: 1.2, status: 'Pending', date: '2025-03-26' },
-        ],
-        openOrders: [
-          { pair: 'BTC/USDT', side: 'Buy', price: 64200, amount: 0.02, status: 'Open' },
-          { pair: 'ETH/USDT', side: 'Sell', price: 3350, amount: 1.5, status: 'Open' },
-        ],
-        orderHistory: [
-          { pair: 'BTC/USDT', side: 'Sell', price: 65200, amount: 0.01, status: 'Filled', date: '2025-03-25' },
-          { pair: 'SOL/USDT', side: 'Buy', price: 142.5, amount: 5, status: 'Filled', date: '2025-03-24' },
-        ],
-        marketData: [
-          { symbol: 'BTC', name: 'Bitcoin', price: 64382.20, change: 2.34 },
-          { symbol: 'ETH', name: 'Ethereum', price: 3348.15, change: 1.87 },
-          { symbol: 'SOL', name: 'Solana', price: 142.80, change: -0.92 },
-          { symbol: 'XRP', name: 'Ripple', price: 0.524, change: 0.45 },
-        ],
-        loginHistory: [
-          { device: 'Chrome on macOS', ip: '192.168.1.1', date: '2025-03-29 10:23', status: 'Success' },
-          { device: 'Safari on iPhone', ip: '192.168.1.5', date: '2025-03-28 18:12', status: 'Success' },
-        ],
-        activeSessions: [
-          { device: 'Chrome on macOS', ip: '192.168.1.1', lastActive: 'Now', current: true },
-          { device: 'Safari on iPhone', ip: '192.168.1.5', lastActive: '2 hours ago', current: false },
-        ],
-      };
+  <div class="bg-white p-6 rounded-xl shadow-sm mt-6">
+    <h2 class="font-bold mb-4">Manage Documents</h2>
+    <div id="adminDocs" class="text-sm space-y-2"></div>
+  </div>
+</main>
 
-      // DOM elements
-      const authScreen = document.getElementById('authScreen');
-      const authCard = document.getElementById('authCard');
-      const dashboardScreen = document.getElementById('dashboardScreen');
-      const mainContent = document.getElementById('mainContent');
-      const userAvatar = document.getElementById('userAvatar');
-      const sidebarUserName = document.getElementById('sidebarUserName');
-      const logoutBtn = document.getElementById('logoutBtn');
+<!-- ============ WHATSAPP FLOAT ============ -->
+<a href="https://wa.me/254751841512?text=Hello%2C%20I%20visited%20your%20educational%20notes%20website%20and%20I%20would%20like%20to%20make%20an%20enquiry%20about%20your%20notes%20and%20past%20papers."
+   target="_blank" class="whatsapp-float" aria-label="WhatsApp">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
 
-      // ========== HELPER FUNCTIONS ==========
-      function renderAuth() {
-        let html = '';
-        const s = state;
-        if (s.authStep === 'login') {
-          html = `
-            <div class="auth-header">
-              <h2>Welcome back</h2>
-              <p>Sign in to your NEXA account</p>
-            </div>
-            <form id="loginForm">
-              <div class="form-group">
-                <label>Email or Phone</label>
-                <input type="text" id="loginEmail" placeholder="you@example.com" value="demo@nexa.io" required>
-              </div>
-              <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="loginPassword" placeholder="••••••••" value="password123" required>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.85rem; color:#94a3b8; text-transform:none;">
-                  <input type="checkbox" id="rememberMe" checked style="width:auto;"> Remember me
-                </label>
-                <a id="forgotLink" style="color:#3b82f6; font-size:0.85rem; cursor:pointer;">Forgot?</a>
-              </div>
-              <button type="submit" class="btn btn-primary" style="width:100%;">Sign in</button>
-            </form>
-            <div class="auth-footer">
-              Don't have an account? <a id="goRegister">Create one</a>
-            </div>
-          `;
-          authCard.innerHTML = html;
-          document.getElementById('loginForm').addEventListener('submit', handleLogin);
-          document.getElementById('goRegister').addEventListener('click', () => { state.authStep = 'register'; renderAuth(); });
-          document.getElementById('forgotLink').addEventListener('click', () => { state.authStep = 'forgot'; renderAuth(); });
-        } else if (s.authStep === 'register') {
-          html = `
-            <div class="auth-header">
-              <h2>Create account</h2>
-              <p>Start your trading journey</p>
-            </div>
-            <form id="registerForm">
-              <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="regName" placeholder="John Doe" value="John Doe" required>
-              </div>
-              <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="regEmail" placeholder="you@example.com" value="demo@nexa.io" required>
-              </div>
-              <div class="form-group">
-                <label>Phone Number</label>
-                <input type="tel" id="regPhone" placeholder="+1 234 567 890" value="+15551234567" required>
-              </div>
-              <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="regPassword" placeholder="••••••••" value="password123" required>
-              </div>
-              <button type="submit" class="btn btn-primary" style="width:100%;">Register</button>
-            </form>
-            <div class="auth-footer">
-              Already have an account? <a id="goLogin">Sign in</a>
-            </div>
-          `;
-          authCard.innerHTML = html;
-          document.getElementById('registerForm').addEventListener('submit', handleRegister);
-          document.getElementById('goLogin').addEventListener('click', () => { state.authStep = 'login'; renderAuth(); });
-        } else if (s.authStep === 'forgot') {
-          html = `
-            <div class="auth-header">
-              <h2>Reset password</h2>
-              <p>We'll send a reset code to your email</p>
-            </div>
-            <form id="forgotForm">
-              <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="forgotEmail" placeholder="you@example.com" value="demo@nexa.io" required>
-              </div>
-              <button type="submit" class="btn btn-primary" style="width:100%;">Send reset code</button>
-            </form>
-            <div class="auth-footer">
-              <a id="backToLogin">Back to login</a>
-            </div>
-          `;
-          authCard.innerHTML = html;
-          document.getElementById('forgotForm').addEventListener('submit', handleForgot);
-          document.getElementById('backToLogin').addEventListener('click', () => { state.authStep = 'login'; renderAuth(); });
-        } else if (s.authStep === 'verify2fa') {
-          const methodLabel = s.verificationMethod === 'email' ? 'Email' : 'SMS';
-          html = `
-            <div class="auth-header">
-              <h2>Two-step verification</h2>
-              <p>Enter the 6-digit code sent to your ${methodLabel.toLowerCase()}</p>
-              <p style="font-size:0.8rem; color:#64748b; margin-top:0.3rem;">${s.verificationMethod === 'email' ? s.pendingEmail : s.pendingPhone}</p>
-            </div>
-            <form id="verifyForm">
-              <div class="form-group">
-                <label>Verification code</label>
-                <input type="text" id="codeInput" class="code-input" maxlength="6" placeholder="000000" inputmode="numeric" autocomplete="one-time-code" required>
-              </div>
-              <div id="codeError" class="error-msg"></div>
-              <button type="submit" class="btn btn-primary" style="width:100%;">Verify</button>
-            </form>
-            <div class="timer-text" id="timerText">Resend available in ${s.resendTimer}s</div>
-            <div style="text-align:center; margin-top:1rem;">
-              <button class="btn btn-sm btn-outline" id="switchMethod">
-                Use ${s.verificationMethod === 'email' ? 'SMS' : 'Email'} instead
-              </button>
-            </div>
-            <div class="auth-footer">
-              <a id="backToLoginFrom2fa">Cancel and go back</a>
-            </div>
-          `;
-          authCard.innerHTML = html;
-          document.getElementById('verifyForm').addEventListener('submit', handleVerify);
-          document.getElementById('switchMethod').addEventListener('click', () => {
-            state.verificationMethod = state.verificationMethod === 'email' ? 'sms' : 'email';
-            generateAndSendCode();
-            renderAuth();
-          });
-          document.getElementById('backToLoginFrom2fa').addEventListener('click', () => {
-            state.authStep = 'login';
-            state.pendingEmail = '';
-            state.pendingPhone = '';
-            renderAuth();
-          });
-          startResendTimer();
-        } else if (s.authStep === 'resetPassword') {
-          html = `
-            <div class="auth-header">
-              <h2>New password</h2>
-              <p>Enter your new password</p>
-            </div>
-            <form id="resetForm">
-              <div class="form-group">
-                <label>New Password</label>
-                <input type="password" id="newPassword" placeholder="••••••••" required>
-              </div>
-              <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" id="confirmPassword" placeholder="••••••••" required>
-              </div>
-              <div id="resetError" class="error-msg"></div>
-              <button type="submit" class="btn btn-primary" style="width:100%;">Update password</button>
-            </form>
-            <div class="auth-footer">
-              <a id="backToLoginFromReset">Back to login</a>
-            </div>
-          `;
-          authCard.innerHTML = html;
-          document.getElementById('resetForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const np = document.getElementById('newPassword').value;
-            const cp = document.getElementById('confirmPassword').value;
-            if (np !== cp) {
-              document.getElementById('resetError').textContent = 'Passwords do not match.';
-              document.getElementById('resetError').style.display = 'block';
-              return;
-            }
-            alert('Password updated (simulated). You can now log in.');
-            state.authStep = 'login';
-            renderAuth();
-          });
-          document.getElementById('backToLoginFromReset').addEventListener('click', () => { state.authStep = 'login'; renderAuth(); });
-        }
+<!-- ============ FOOTER ============ -->
+<footer class="bg-slate-900 text-slate-300 mt-auto">
+  <div class="max-w-7xl mx-auto px-4 py-8 grid md:grid-cols-3 gap-6 text-sm">
+    <div>
+      <h3 class="font-bold text-white mb-2">📚 EduNotes</h3>
+      <p>Quality academic notes, revision materials, and past papers for students across Kenya.</p>
+    </div>
+    <div>
+      <h3 class="font-bold text-white mb-2">Quick Links</h3>
+      <ul class="space-y-1">
+        <li><a href="#" onclick="showPage('home')" class="hover:text-white">Home</a></li>
+        <li><a href="#" onclick="showPage('notes')" class="hover:text-white">All Notes</a></li>
+        <li><a href="#" onclick="showPage('papers')" class="hover:text-white">Past Papers</a></li>
+        <li><a href="#" onclick="showPage('contact')" class="hover:text-white">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="font-bold text-white mb-2">Contact</h3>
+      <p>WhatsApp: <a href="https://wa.me/254751841512" class="text-emerald-400">+254 751 841 512</a></p>
+      <p class="mt-2 text-xs">Payments via M-Pesa. Downloads only after verified payment.</p>
+    </div>
+  </div>
+  <div class="border-t border-slate-800 text-center py-4 text-xs">© 2025 EduNotes. All rights reserved.</div>
+</footer>
+
+<script>
+// ============ STATE ============
+let currentDoc = null;
+let pollTimer = null;
+let currentCheckoutId = null;
+let categories = [];
+
+// ============ NAVIGATION ============
+function showPage(name) {
+  document.querySelectorAll('main[id^="page-"]').forEach(m => m.classList.add('hidden-page'));
+  const el = document.getElementById('page-' + name);
+  if (el) el.classList.remove('hidden-page');
+  window.scrollTo(0, 0);
+  if (name === 'notes' || name === 'papers') loadDocuments(name);
+  if (name === 'admin') checkAdmin();
+  if (name === 'adminDash') loadAdminData();
+  if (name === 'home') loadHome();
+}
+
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// ============ HOME ============
+async function loadHome() {
+  const cats = await fetch('/api/categories').then(r => r.json());
+  categories = cats;
+  const catBox = document.getElementById('homeCategories');
+  catBox.innerHTML = cats.map(c => `
+    <button onclick="filterCategory('${c.slug}')"
+      class="bg-white p-4 rounded-xl shadow-sm hover:shadow-md card-hover text-sm font-medium text-left">
+      ${c.name}
+    </button>`).join('');
+
+  const docs = await fetch('/api/documents').then(r => r.json());
+  document.getElementById('homeDocs').innerHTML = docs.slice(0, 6).map(docCard).join('');
+}
+
+function searchFromHome() {
+  const q = document.getElementById('homeSearch').value.trim();
+  showPage('notes');
+  document.getElementById('searchInput').value = q;
+  loadDocuments('notes', q);
+}
+
+function filterCategory(slug) {
+  showPage('notes');
+  document.getElementById('categoryFilter').value = slug;
+  loadDocuments('notes');
+}
+
+// ============ DOCUMENTS LIST ============
+async function loadDocuments(page, forcedQuery) {
+  document.getElementById('notesTitle').textContent = page === 'papers' ? 'Past Examination Papers' : 'All Notes';
+  const filter = document.getElementById('categoryFilter');
+  if (!filter.options.length || filter.options.length === 1) {
+    filter.innerHTML = '<option value="">All Categories</option>' +
+      categories.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+  }
+  if (page === 'papers') filter.value = 'past-examination-papers';
+
+  const q = forcedQuery !== undefined ? forcedQuery : document.getElementById('searchInput').value;
+  const cat = filter.value;
+  const params = new URLSearchParams();
+  if (q) params.set('q', q);
+  if (cat) params.set('category', cat);
+
+  const docs = await fetch('/api/documents?' + params).then(r => r.json());
+  document.getElementById('docsList').innerHTML = docs.length
+    ? docs.map(docCard).join('')
+    : '<p class="col-span-full text-slate-500">No documents found.</p>';
+}
+
+function docCard(d) {
+  return `
+    <div class="bg-white rounded-xl shadow-sm p-5 card-hover flex flex-col">
+      <div class="text-xs text-emerald-700 font-semibold mb-2">${d.category || 'General'}</div>
+      <h3 class="font-bold text-lg mb-2">${escapeHtml(d.title)}</h3>
+      <p class="text-sm text-slate-600 mb-4 flex-1">${escapeHtml((d.description || '').slice(0, 100))}${(d.description||'').length>100?'…':''}</p>
+      <div class="flex items-center justify-between">
+        <span class="text-xl font-bold text-emerald-700">KSh ${d.price_ksh}</span>
+        <button onclick="viewDoc(${d.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">View</button>
+      </div>
+    </div>`;
+}
+
+// ============ DOCUMENT DETAIL ============
+async function viewDoc(id) {
+  showPage('document');
+  const d = await fetch('/api/documents/' + id).then(r => r.json());
+  currentDoc = d;
+  document.getElementById('docDetail').innerHTML = `
+    <div class="bg-white p-6 rounded-xl shadow-sm">
+      <div class="text-sm text-emerald-700 font-semibold mb-2">${d.category || ''}</div>
+      <h1 class="text-2xl font-bold mb-3">${escapeHtml(d.title)}</h1>
+      <p class="text-slate-600 mb-6">${escapeHtml(d.description || '')}</p>
+      <div class="flex items-center justify-between border-t pt-4">
+        <div>
+          <div class="text-3xl font-bold text-emerald-700">KSh ${d.price_ksh}</div>
+          <div class="text-xs text-slate-500">${d.download_count} downloads</div>
+        </div>
+        <button onclick="goToPayment(${d.id})" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-8 py-3 rounded-lg">
+          Buy & Download
+        </button>
+      </div>
+    </div>`;
+}
+
+// ============ PAYMENT ============
+async function goToPayment(id) {
+  showPage('payment');
+  const d = await fetch('/api/documents/' + id).then(r => r.json());
+  currentDoc = d;
+  document.getElementById('payDocInfo').innerHTML = `
+    <div class="text-sm text-slate-500">You are paying for</div>
+    <div class="font-bold text-lg">${escapeHtml(d.title)}</div>
+    <div class="text-2xl font-bold text-emerald-700 mt-2">KSh ${d.price_ksh}</div>`;
+  document.getElementById('payStatus').classList.add('hidden');
+  document.getElementById('payBtn').disabled = false;
+  document.getElementById('payBtn').textContent = 'Pay via M-Pesa';
+}
+
+async function initiatePayment(e) {
+  e.preventDefault();
+  const phone = document.getElementById('payPhone').value.trim();
+  if (!currentDoc) return;
+  const btn = document.getElementById('payBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending STK Push...';
+
+  const statusBox = document.getElementById('payStatus');
+  statusBox.classList.remove('hidden');
+  statusBox.innerHTML = '<div class="spinner mx-auto mb-2"></div><p class="text-slate-600">Check your phone and enter M-Pesa PIN…</p>';
+
+  try {
+    const res = await fetch('/api/payment/initiate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ document_id: currentDoc.id, phone })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+
+    currentCheckoutId = data.checkout_request_id;
+    pollStatus();
+  } catch (err) {
+    statusBox.innerHTML = `<p class="text-red-600">${escapeHtml(err.message)}</p>`;
+    btn.disabled = false;
+    btn.textContent = 'Retry';
+  }
+}
+
+function pollStatus() {
+  if (pollTimer) clearInterval(pollTimer);
+  let attempts = 0;
+  pollTimer = setInterval(async () => {
+    attempts++;
+    if (attempts > 40) {
+      clearInterval(pollTimer);
+      showPaymentFailed('Timed out waiting for confirmation.');
+      return;
+    }
+    try {
+      const r = await fetch('/api/payment/status/' + currentCheckoutId).then(x => x.json());
+      if (r.status === 'success') {
+        clearInterval(pollTimer);
+        showPaymentSuccess(r);
+      } else if (r.status === 'failed') {
+        clearInterval(pollTimer);
+        showPaymentFailed(r.result_desc || 'Payment was not completed.');
       }
+    } catch (e) {}
+  }, 3000);
+}
 
-      // ========== AUTH HANDLERS ==========
-      function handleLogin(e) {
-        e.preventDefault();
-        const emailOrPhone = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
-        if (!emailOrPhone || !password) {
-          alert('Please fill in all fields.');
-          return;
-        }
-        // Simulate credential check. In production this would be a server call.
-        // Accept any values but require a known demo user or create one.
-        state.pendingEmail = emailOrPhone.includes('@') ? emailOrPhone : 'demo@nexa.io';
-        state.pendingPhone = emailOrPhone.includes('@') ? '+15551234567' : emailOrPhone;
-        state.pendingFullName = 'John Doe';
-        state.verificationMethod = 'email'; // default
-        generateAndSendCode();
-        state.authStep = 'verify2fa';
-        renderAuth();
-      }
+async function showPaymentSuccess(tx) {
+  showPage('success');
+  document.getElementById('successInfo').innerHTML = `
+    <div><strong>Status:</strong> <span class="text-emerald-700">Paid</span></div>
+    <div><strong>Document:</strong> ${escapeHtml(currentDoc.title)}</div>
+    <div><strong>Amount:</strong> KSh ${tx.amount}</div>
+    <div><strong>M-Pesa Ref:</strong> ${tx.mpesa_receipt || '—'}</div>
+    <div><strong>Date:</strong> ${new Date(tx.completed_at).toLocaleString()}</div>`;
+  try {
+    const t = await fetch('/api/payment/download-token/' + currentCheckoutId).then(r => r.json());
+    document.getElementById('downloadBtn').href = '/download/' + t.token;
+  } catch (e) {
+    document.getElementById('downloadBtn').textContent = 'Generating link…';
+  }
+}
 
-      function handleRegister(e) {
-        e.preventDefault();
-        const name = document.getElementById('regName').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const phone = document.getElementById('regPhone').value.trim();
-        const password = document.getElementById('regPassword').value;
-        if (!name || !email || !phone || !password) {
-          alert('Please fill in all fields.');
-          return;
-        }
-        state.pendingFullName = name;
-        state.pendingEmail = email;
-        state.pendingPhone = phone;
-        state.verificationMethod = 'email';
-        generateAndSendCode();
-        state.authStep = 'verify2fa';
-        renderAuth();
-      }
+function showPaymentFailed(reason) {
+  showPage('failed');
+  document.getElementById('failReason').textContent = reason;
+}
 
-      function handleForgot(e) {
-        e.preventDefault();
-        const email = document.getElementById('forgotEmail').value.trim();
-        if (!email) {
-          alert('Please enter your email.');
-          return;
-        }
-        // Simulate sending a reset code. In a real app, send an email.
-        alert('A password reset link has been sent to ' + email + ' (simulated).');
-        state.authStep = 'resetPassword';
-        renderAuth();
-      }
+// ============ CONTACT ============
+async function sendEnquiry(e) {
+  e.preventDefault();
+  const body = {
+    name: document.getElementById('enqName').value,
+    phone: document.getElementById('enqPhone').value,
+    message: document.getElementById('enqMsg').value
+  };
+  await fetch('/api/enquiries', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  document.getElementById('enqStatus').textContent = 'Message sent. We will reply soon.';
+  e.target.reset();
+}
 
-      function generateAndSendCode() {
-        // Generate 6-digit code
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
-        state.verificationCode = code;
-        state.codeExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
-        state.resendTimer = 30;
-        state.attempts = 0;
-        // NEVER display the code in UI/logs in production. Here it's stored only in memory for demo.
-        // In a real app, this would be sent server-side via email/SMS.
-        console.log('Simulated code (do NOT log in production):', code); // Only for demo purpose
-      }
+// ============ ADMIN ============
+async function checkAdmin() {
+  const r = await fetch('/admin/me').then(x => x.json());
+  if (r.isAdmin) { showPage('adminDash'); loadAdminData(); }
+}
 
-      function startResendTimer() {
-        if (window.resendInterval) clearInterval(window.resendInterval);
-        window.resendInterval = setInterval(() => {
-          if (state.resendTimer > 0) {
-            state.resendTimer--;
-            const el = document.getElementById('timerText');
-            if (el) el.textContent = `Resend available in ${state.resendTimer}s`;
-          } else {
-            clearInterval(window.resendInterval);
-            const el = document.getElementById('timerText');
-            if (el) {
-              el.innerHTML = `<button class="btn btn-sm btn-outline" id="resendBtn">Resend code</button>`;
-              document.getElementById('resendBtn').addEventListener('click', () => {
-                generateAndSendCode();
-                renderAuth();
-              });
-            }
-          }
-        }, 1000);
-      }
+async function adminLogin(e) {
+  e.preventDefault();
+  const r = await fetch('/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      username: document.getElementById('adminUser').value,
+      password: document.getElementById('adminPass').value
+    })
+  });
+  const data = await r.json();
+  if (r.ok) { showPage('adminDash'); loadAdminData(); }
+  else document.getElementById('loginError').textContent = data.error;
+}
 
-      function handleVerify(e) {
-        e.preventDefault();
-        const entered = document.getElementById('codeInput').value.trim();
-        const errorEl = document.getElementById('codeError');
-        if (!entered || entered.length !== 6) {
-          errorEl.textContent = 'Please enter a 6-digit code.';
-          errorEl.style.display = 'block';
-          return;
-        }
-        if (state.locked) {
-          errorEl.textContent = 'Too many attempts. Please wait and try again later.';
-          errorEl.style.display = 'block';
-          return;
-        }
-        if (Date.now() > state.codeExpiry) {
-          errorEl.textContent = 'Code expired. Please request a new one.';
-          errorEl.style.display = 'block';
-          return;
-        }
-        if (entered === state.verificationCode) {
-          // Success! Log in the user
-          state.currentUser = {
-            name: state.pendingFullName || 'John Doe',
-            email: state.pendingEmail || 'demo@nexa.io',
-            phone: state.pendingPhone || '+15551234567',
-          };
-          state.authStep = 'login';
-          // Hide auth screen, show dashboard
-          authScreen.classList.add('hidden');
-          dashboardScreen.classList.remove('hidden');
-          userAvatar.textContent = state.currentUser.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-          sidebarUserName.textContent = state.currentUser.name;
-          state.activeView = 'dashboard';
-          renderDashboardView();
-        } else {
-          state.attempts++;
-          if (state.attempts >= 3) {
-            state.locked = true;
-            errorEl.textContent = 'Account temporarily locked. Please try again later.';
-          } else {
-            errorEl.textContent = `Incorrect code. ${3 - state.attempts} attempts remaining.`;
-          }
-          errorEl.style.display = 'block';
-        }
-      }
+async function adminLogout() {
+  await fetch('/admin/logout', { method: 'POST' });
+  showPage('home');
+}
 
-      // ========== DASHBOARD VIEWS ==========
-      function renderDashboardView() {
-        if (!state.currentUser) return;
-        const view = state.activeView;
-        if (view === 'dashboard') {
-          renderMainDashboard();
-        } else if (view === 'trade') {
-          renderTradeView();
-        } else if (view === 'wallet') {
-          renderWalletView();
-        } else if (view === 'profile') {
-          renderProfileView();
-        }
-        // Update active nav
-        document.querySelectorAll('.nav-item').forEach(item => {
-          item.classList.remove('active');
-          if (item.dataset.view === view) item.classList.add('active');
-        });
-      }
+async function loadAdminData() {
+  const [stats, tx, docs] = await Promise.all([
+    fetch('/admin/stats').then(r => r.json()),
+    fetch('/admin/transactions').then(r => r.json()),
+    fetch('/api/documents').then(r => r.json())
+  ]);
 
-      function renderMainDashboard() {
-        const totalUsd = state.balances.usdt + (state.balances.btc * 64382) + (state.balances.eth * 3348) + (state.balances.sol * 142.8);
-        const pnl = 1250.75;
-        mainContent.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
-            <div>
-              <h1 style="font-size:1.8rem; font-weight:700; letter-spacing:-0.02em;">Dashboard</h1>
-              <p class="text-muted">Welcome back, ${state.currentUser.name.split(' ')[0]}</p>
-            </div>
-            <div class="sim-tag"><i class="fas fa-flask"></i> Simulated Environment</div>
-          </div>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:1.25rem; margin-bottom:2rem;">
-            <div class="card">
-              <div class="stat-label">Total Balance</div>
-              <div class="stat-value">$${totalUsd.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</div>
-            </div>
-            <div class="card">
-              <div class="stat-label">Available</div>
-              <div class="stat-value">$${state.balances.usdt.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</div>
-            </div>
-            <div class="card">
-              <div class="stat-label">Total P&L</div>
-              <div class="stat-value ${pnl >= 0 ? 'text-success' : 'text-danger'}">${pnl >= 0 ? '+' : ''}$${pnl.toLocaleString()}</div>
-            </div>
-          </div>
+  document.getElementById('statsGrid').innerHTML = `
+    ${statCard('Total Revenue', 'KSh ' + stats.revenue)}
+    ${statCard('Payments', stats.payments)}
+    ${statCard('Documents', stats.documents)}
+    ${statCard('Enquiries', stats.enquiries)}`;
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:2rem;">
-            <div class="card">
-              <h3 style="margin-bottom:1rem; font-size:1rem;">Market Prices</h3>
-              <table class="market-table">
-                <thead><tr><th>Asset</th><th>Price</th><th>24h</th></tr></thead>
-                <tbody>
-                  ${state.marketData.map(coin => `
-                    <tr>
-                      <td><div class="coin-symbol"><div class="coin-icon">${coin.symbol[0]}</div>${coin.symbol}</div></td>
-                      <td>$${coin.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
-                      <td class="${coin.change >= 0 ? 'text-success' : 'text-danger'}">${coin.change >= 0 ? '+' : ''}${coin.change}%</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-            <div class="card">
-              <h3 style="margin-bottom:1rem; font-size:1rem;">Recent Transactions</h3>
-              <table class="market-table">
-                <thead><tr><th>Type</th><th>Asset</th><th>Amount</th><th>Status</th></tr></thead>
-                <tbody>
-                  ${state.transactions.map(tx => `
-                    <tr>
-                      <td>${tx.type}</td>
-                      <td>${tx.asset}</td>
-                      <td>${tx.amount}</td>
-                      <td><span class="badge ${tx.status === 'Completed' ? 'badge-success' : ''}">${tx.status}</span></td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        `;
-      }
+  document.getElementById('upCat').innerHTML = categories.map(c =>
+    `<option value="${c.id}">${c.name}</option>`).join('');
 
-      function renderTradeView() {
-        mainContent.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
-            <h1 style="font-size:1.8rem; font-weight:700;">Trade</h1>
-            <div class="sim-tag"><i class="fas fa-flask"></i> Simulated Trading</div>
-          </div>
-          <div class="trade-panel">
-            <div class="pair-selector">
-              <button class="pair-btn active">BTC/USDT</button>
-              <button class="pair-btn">ETH/USDT</button>
-              <button class="pair-btn">SOL/USDT</button>
-              <button class="pair-btn">XRP/USDT</button>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
-              <div>
-                <div class="order-type-tabs">
-                  <div class="order-type-tab active">Buy</div>
-                  <div class="order-type-tab">Sell</div>
-                </div>
-                <div class="form-group">
-                  <label>Price (USDT)</label>
-                  <input type="number" value="64382.20" step="0.01">
-                </div>
-                <div class="form-group">
-                  <label>Amount (BTC)</label>
-                  <input type="number" placeholder="0.00">
-                </div>
-                <button class="btn btn-success" style="width:100%; margin-top:0.5rem;">Buy BTC</button>
-              </div>
-              <div>
-                <h4 style="margin-bottom:1rem;">Open Orders</h4>
-                ${state.openOrders.map(o => `
-                  <div style="display:flex; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid #1f2a3f;">
-                    <span>${o.pair} ${o.side}</span>
-                    <span>${o.amount} @ $${o.price}</span>
-                    <span class="badge">${o.status}</span>
-                  </div>
-                `).join('')}
-                <h4 style="margin-top:1.5rem; margin-bottom:0.5rem;">Order History</h4>
-                ${state.orderHistory.map(o => `
-                  <div style="display:flex; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid #1f2a3f;">
-                    <span>${o.pair} ${o.side}</span>
-                    <span>${o.amount} @ $${o.price}</span>
-                    <span class="badge badge-success">${o.status}</span>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          </div>
-        `;
-      }
+  document.getElementById('adminTx').innerHTML = tx.length ? tx.map(t => `
+    <div class="border-b pb-2">
+      <div class="font-medium">${escapeHtml(t.title || '—')}</div>
+      <div class="text-xs text-slate-500">${t.phone_number} · KSh ${t.amount} · ${t.status}</div>
+    </div>`).join('') : '<p class="text-slate-500">No transactions yet.</p>';
 
-      function renderWalletView() {
-        const totalUsd = state.balances.usdt + (state.balances.btc * 64382) + (state.balances.eth * 3348) + (state.balances.sol * 142.8);
-        mainContent.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
-            <h1 style="font-size:1.8rem; font-weight:700;">Wallet</h1>
-            <div class="sim-tag"><i class="fas fa-flask"></i> Simulated Funds</div>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 2fr; gap:1.5rem;">
-            <div class="card">
-              <div class="stat-label">Estimated Total</div>
-              <div class="stat-value">$${totalUsd.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</div>
-              <div style="margin-top:1.5rem; display:flex; flex-direction:column; gap:0.75rem;">
-                <button class="btn btn-primary" onclick="alert('Deposit simulation – no real funds moved.')"><i class="fas fa-arrow-down"></i> Deposit</button>
-                <button class="btn btn-outline" onclick="alert('Withdrawal simulation – no real funds moved.')"><i class="fas fa-arrow-up"></i> Withdraw</button>
-              </div>
-            </div>
-            <div class="card">
-              <h3 style="margin-bottom:1rem;">Your Assets</h3>
-              <div class="wallet-asset-row">
-                <div style="display:flex; align-items:center; gap:0.75rem;"><div class="coin-icon">₮</div><div><strong>USDT</strong><div class="text-muted" style="font-size:0.75rem;">Tether</div></div></div>
-                <div style="text-align:right;"><div>${state.balances.usdt.toLocaleString(undefined, {minimumFractionDigits:2})}</div><div class="text-muted" style="font-size:0.75rem;">$${state.balances.usdt.toLocaleString(undefined, {minimumFractionDigits:2})}</div></div>
-              </div>
-              <div class="wallet-asset-row">
-                <div style="display:flex; align-items:center; gap:0.75rem;"><div class="coin-icon">₿</div><div><strong>BTC</strong><div class="text-muted" style="font-size:0.75rem;">Bitcoin</div></div></div>
-                <div style="text-align:right;"><div>${state.balances.btc}</div><div class="text-muted" style="font-size:0.75rem;">$${(state.balances.btc * 64382).toLocaleString(undefined, {minimumFractionDigits:2})}</div></div>
-              </div>
-              <div class="wallet-asset-row">
-                <div style="display:flex; align-items:center; gap:0.75rem;"><div class="coin-icon">Ξ</div><div><strong>ETH</strong><div class="text-muted" style="font-size:0.75rem;">Ethereum</div></div></div>
-                <div style="text-align:right;"><div>${state.balances.eth}</div><div class="text-muted" style="font-size:0.75rem;">$${(state.balances.eth * 3348).toLocaleString(undefined, {minimumFractionDigits:2})}</div></div>
-              </div>
-              <div class="wallet-asset-row">
-                <div style="display:flex; align-items:center; gap:0.75rem;"><div class="coin-icon">◎</div><div><strong>SOL</strong><div class="text-muted" style="font-size:0.75rem;">Solana</div></div></div>
-                <div style="text-align:right;"><div>${state.balances.sol}</div><div class="text-muted" style="font-size:0.75rem;">$${(state.balances.sol * 142.8).toLocaleString(undefined, {minimumFractionDigits:2})}</div></div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
+  document.getElementById('adminDocs').innerHTML = docs.length ? docs.map(d => `
+    <div class="flex justify-between items-center border-b pb-2">
+      <div>
+        <div class="font-medium">${escapeHtml(d.title)}</div>
+        <div class="text-xs text-slate-500">KSh ${d.price_ksh} · ${d.download_count} downloads</div>
+      </div>
+      <button onclick="deleteDoc(${d.id})" class="text-red-600 text-sm">Delete</button>
+    </div>`).join('') : '<p class="text-slate-500">No documents.</p>';
+}
 
-      function renderProfileView() {
-        mainContent.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
-            <h1 style="font-size:1.8rem; font-weight:700;">Profile & Security</h1>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
-            <div class="card">
-              <h3 style="margin-bottom:1rem;">Personal Information</h3>
-              <div class="form-group"><label>Full Name</label><input type="text" value="${state.currentUser.name}" disabled style="background:#1a2332;"></div>
-              <div class="form-group"><label>Email</label><input type="email" value="${state.currentUser.email}" disabled style="background:#1a2332;"></div>
-              <div class="form-group"><label>Phone</label><input type="tel" value="${state.currentUser.phone}" disabled style="background:#1a2332;"></div>
-              <div style="margin-top:1rem; display:flex; gap:1rem;">
-                <span class="badge badge-success"><i class="fas fa-check-circle"></i> Email Verified</span>
-                <span class="badge badge-success"><i class="fas fa-check-circle"></i> Phone Verified</span>
-              </div>
-            </div>
-            <div class="card">
-              <h3 style="margin-bottom:1rem;">Security Settings</h3>
-              <div style="display:flex; flex-direction:column; gap:1rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span>Two-Factor Authentication</span>
-                  <span class="badge badge-success">Enabled</span>
-                </div>
-                <button class="btn btn-outline" onclick="alert('2FA settings simulation.')">Manage 2FA</button>
-                <button class="btn btn-outline" onclick="alert('Change password simulation.')">Change Password</button>
-                <h4 style="margin-top:1rem;">Login History</h4>
-                ${state.loginHistory.map(l => `
-                  <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #1f2a3f; font-size:0.85rem;">
-                    <span>${l.device}</span><span>${l.date}</span><span class="text-success">${l.status}</span>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          </div>
-        `;
-      }
+function statCard(label, value) {
+  return `<div class="bg-white p-4 rounded-xl shadow-sm">
+    <div class="text-xs text-slate-500">${label}</div>
+    <div class="text-2xl font-bold text-slate-800">${value}</div>
+  </div>`;
+}
 
-      // ========== NAVIGATION & LOGOUT ==========
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-          if (!state.currentUser) return;
-          const view = item.dataset.view;
-          if (view) {
-            state.activeView = view;
-            renderDashboardView();
-          }
-        });
-      });
+async function uploadDoc(e) {
+  e.preventDefault();
+  const fd = new FormData();
+  fd.append('title', document.getElementById('upTitle').value);
+  fd.append('description', document.getElementById('upDesc').value);
+  fd.append('category_id', document.getElementById('upCat').value);
+  fd.append('price_ksh', document.getElementById('upPrice').value);
+  fd.append('file', document.getElementById('upFile').files[0]);
 
-      logoutBtn.addEventListener('click', () => {
-        // Secure logout simulation
-        state.currentUser = null;
-        state.authStep = 'login';
-        state.activeView = 'dashboard';
-        dashboardScreen.classList.add('hidden');
-        authScreen.classList.remove('hidden');
-        renderAuth();
-        if (window.resendInterval) clearInterval(window.resendInterval);
-      });
+  const r = await fetch('/admin/documents', { method: 'POST', body: fd });
+  const data = await r.json();
+  document.getElementById('upStatus').textContent = r.ok ? 'Uploaded!' : ('Error: ' + data.error);
+  if (r.ok) { e.target.reset(); loadAdminData(); }
+}
 
-      // ========== INIT ==========
-      renderAuth();
-      // Simulate a light/dark toggle? We'll keep dark as default, but you can switch via class.
-      // For demo, we add a small theme toggle in the sidebar? Not needed.
+async function deleteDoc(id) {
+  if (!confirm('Delete this document?')) return;
+  await fetch('/admin/documents/' + id, { method: 'DELETE' });
+  loadAdminData();
+}
 
-      // Expose some functions for inline onclick handlers if needed
-      window.state = state;
-    })();
-  </script>
+// ============ UTIL ============
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+// ============ BOOT ============
+(async () => {
+  await loadHome();
+  // Load categories for filter
+  categories = await fetch('/api/categories').then(r => r.json());
+  document.getElementById('categoryFilter').innerHTML =
+    '<option value="">All Categories</option>' +
+    categories.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+
+  document.getElementById('searchInput').addEventListener('input', debounce(() => loadDocuments('notes'), 300));
+  document.getElementById('categoryFilter').addEventListener('change', () => loadDocuments('notes'));
+})();
+
+function debounce(fn, ms) {
+  let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+</script>
 </body>
-</html>
+</html>PORT=3000
+SESSION_SECRET=replace_with_long_random_string
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=notes_marketplace
+DB_USER=postgres
+DB_PASSWORD=yourpassword
+
+ADMIN_USERNAME=admin
+# Generate with: node -e "console.log(require('bcrypt').hashSync('Galian',10))"
+ADMIN_PASSWORD_HASH=$2b$10$abcdefghijklmnopqrstuv
+
+DARAJA_ENV=sandbox
+DARAJA_CONSUMER_KEY=your_sandbox_consumer_key
+DARAJA_CONSUMER_SECRET=your_sandbox_consumer_secret
+DARAJA_SHORTCODE=174379
+DARAJA_PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
+DARAJA_CALLBACK_URL=https://YOUR_NGROK_URL.ngrok.io/api/payment/callback
